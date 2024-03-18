@@ -1,26 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sanitario.Data;
 using Sanitario.Models;
 
 namespace Sanitario.Controllers
 {
-    public class AnimaleController : Controller
+    public class CassettoController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public AnimaleController(ApplicationDbContext context)
+        public CassettoController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Animale
+        // GET: Cassetto
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Animali.ToListAsync());
+            var applicationDbContext = _context.Cassetti.Include(c => c.Armadietto);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Animale/Details/5
+        // GET: Cassetto/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -28,40 +30,44 @@ namespace Sanitario.Controllers
                 return NotFound();
             }
 
-            var animale = await _context.Animali
-                .FirstOrDefaultAsync(m => m.IdAnimale == id);
-            if (animale == null)
+            var cassetto = await _context.Cassetti
+                .Include(c => c.Armadietto)
+                .FirstOrDefaultAsync(m => m.IdCassetto == id);
+            if (cassetto == null)
             {
                 return NotFound();
             }
 
-            return View(animale);
+            return View(cassetto);
         }
 
-        // GET: Animale/Create
+        // GET: Cassetto/Create
         public IActionResult Create()
         {
+            ViewData["IdArmadietto"] = new SelectList(_context.Armadietti, "IdArmadietto", "IdArmadietto");
             return View();
         }
 
-        // POST: Animale/Create
+        // POST: Cassetto/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip")] Animale animale)
+        public async Task<IActionResult> Create([Bind("IdArmadietto,NumeroCassetto")] Cassetto cassetto)
         {
-
+            ModelState.Remove("Armadietto");
+            ModelState.Remove("Medicinali");
             if (ModelState.IsValid)
             {
-                _context.Add(animale);
+                _context.Add(cassetto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(animale);
+            ViewData["IdArmadietto"] = new SelectList(_context.Armadietti, "IdArmadietto", "IdArmadietto", cassetto.IdArmadietto);
+            return View(cassetto);
         }
 
-        // GET: Animale/Edit/5
+        // GET: Cassetto/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -69,37 +75,39 @@ namespace Sanitario.Controllers
                 return NotFound();
             }
 
-            var animale = await _context.Animali.FindAsync(id);
-            if (animale == null)
+            var cassetto = await _context.Cassetti.FindAsync(id);
+            if (cassetto == null)
             {
                 return NotFound();
             }
-            return View(animale);
+            ViewData["IdArmadietto"] = new SelectList(_context.Armadietti, "IdArmadietto", "IdArmadietto", cassetto.IdArmadietto);
+            return View(cassetto);
         }
 
-        // POST: Animale/Edit/5
+        // POST: Cassetto/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdAnimale,Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip")] Animale animale)
+        public async Task<IActionResult> Edit(int id, [Bind("IdCassetto,IdArmadietto,NumeroCassetto")] Cassetto cassetto)
         {
-            if (id != animale.IdAnimale)
+            if (id != cassetto.IdCassetto)
             {
                 return NotFound();
             }
 
-            ModelState.Remove("Visite");
+            ModelState.Remove("Armadietto");
+            ModelState.Remove("Medicinali");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(animale);
+                    _context.Update(cassetto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AnimaleExists(animale.IdAnimale))
+                    if (!CassettoExists(cassetto.IdCassetto))
                     {
                         return NotFound();
                     }
@@ -110,10 +118,11 @@ namespace Sanitario.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(animale);
+            ViewData["IdArmadietto"] = new SelectList(_context.Armadietti, "IdArmadietto", "IdArmadietto", cassetto.IdArmadietto);
+            return View(cassetto);
         }
 
-        // GET: Animale/Delete/5
+        // GET: Cassetto/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,34 +130,35 @@ namespace Sanitario.Controllers
                 return NotFound();
             }
 
-            var animale = await _context.Animali
-                .FirstOrDefaultAsync(m => m.IdAnimale == id);
-            if (animale == null)
+            var cassetto = await _context.Cassetti
+                .Include(c => c.Armadietto)
+                .FirstOrDefaultAsync(m => m.IdCassetto == id);
+            if (cassetto == null)
             {
                 return NotFound();
             }
 
-            return View(animale);
+            return View(cassetto);
         }
 
-        // POST: Animale/Delete/5
+        // POST: Cassetto/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var animale = await _context.Animali.FindAsync(id);
-            if (animale != null)
+            var cassetto = await _context.Cassetti.FindAsync(id);
+            if (cassetto != null)
             {
-                _context.Animali.Remove(animale);
+                _context.Cassetti.Remove(cassetto);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AnimaleExists(int id)
+        private bool CassettoExists(int id)
         {
-            return _context.Animali.Any(e => e.IdAnimale == id);
+            return _context.Cassetti.Any(e => e.IdCassetto == id);
         }
     }
 }

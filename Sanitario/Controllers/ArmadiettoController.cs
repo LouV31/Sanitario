@@ -5,22 +5,22 @@ using Sanitario.Models;
 
 namespace Sanitario.Controllers
 {
-    public class AnimaleController : Controller
+    public class ArmadiettoController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public AnimaleController(ApplicationDbContext context)
+        public ArmadiettoController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Animale
+        // GET: Armadietto
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Animali.ToListAsync());
+            return View(await _context.Armadietti.ToListAsync());
         }
 
-        // GET: Animale/Details/5
+        // GET: Armadietto/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -28,40 +28,40 @@ namespace Sanitario.Controllers
                 return NotFound();
             }
 
-            var animale = await _context.Animali
-                .FirstOrDefaultAsync(m => m.IdAnimale == id);
-            if (animale == null)
+            var armadietto = await _context.Armadietti
+                .FirstOrDefaultAsync(m => m.IdArmadietto == id);
+            if (armadietto == null)
             {
                 return NotFound();
             }
 
-            return View(animale);
+            return View(armadietto);
         }
 
-        // GET: Animale/Create
+        // GET: Armadietto/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Animale/Create
+        // POST: Armadietto/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip")] Animale animale)
+        public async Task<IActionResult> Create([Bind("NumeroArmadietto")] Armadietto armadietto)
         {
-
+            ModelState.Remove("Cassetti");
             if (ModelState.IsValid)
             {
-                _context.Add(animale);
+                _context.Add(armadietto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(animale);
+            return View(armadietto);
         }
 
-        // GET: Animale/Edit/5
+        // GET: Armadietto/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -69,37 +69,37 @@ namespace Sanitario.Controllers
                 return NotFound();
             }
 
-            var animale = await _context.Animali.FindAsync(id);
-            if (animale == null)
+            var armadietto = await _context.Armadietti.FindAsync(id);
+            if (armadietto == null)
             {
                 return NotFound();
             }
-            return View(animale);
+            return View(armadietto);
         }
 
-        // POST: Animale/Edit/5
+        // POST: Armadietto/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdAnimale,Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip")] Animale animale)
+        public async Task<IActionResult> Edit(int id, [Bind("IdArmadietto,NumeroArmadietto")] Armadietto armadietto)
         {
-            if (id != animale.IdAnimale)
+            if (id != armadietto.IdArmadietto)
             {
                 return NotFound();
             }
 
-            ModelState.Remove("Visite");
+            ModelState.Remove("Cassetti");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(animale);
+                    _context.Update(armadietto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AnimaleExists(animale.IdAnimale))
+                    if (!ArmadiettoExists(armadietto.IdArmadietto))
                     {
                         return NotFound();
                     }
@@ -110,10 +110,10 @@ namespace Sanitario.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(animale);
+            return View(armadietto);
         }
 
-        // GET: Animale/Delete/5
+        // GET: Armadietto/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,34 +121,34 @@ namespace Sanitario.Controllers
                 return NotFound();
             }
 
-            var animale = await _context.Animali
-                .FirstOrDefaultAsync(m => m.IdAnimale == id);
-            if (animale == null)
+            var armadietto = await _context.Armadietti
+                .FirstOrDefaultAsync(m => m.IdArmadietto == id);
+            if (armadietto == null)
             {
                 return NotFound();
             }
 
-            return View(animale);
+            return View(armadietto);
         }
 
-        // POST: Animale/Delete/5
+        // POST: Armadietto/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var animale = await _context.Animali.FindAsync(id);
-            if (animale != null)
+            var armadietto = await _context.Armadietti.FindAsync(id);
+            if (armadietto != null)
             {
-                _context.Animali.Remove(animale);
+                _context.Armadietti.Remove(armadietto);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AnimaleExists(int id)
+        private bool ArmadiettoExists(int id)
         {
-            return _context.Animali.Any(e => e.IdAnimale == id);
+            return _context.Armadietti.Any(e => e.IdArmadietto == id);
         }
     }
 }
