@@ -6,30 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Sanitario.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Animali",
-                columns: table => new
-                {
-                    IdAnimale = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Tipologia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DataRegistrazione = table.Column<DateOnly>(type: "date", nullable: false),
-                    DataNascita = table.Column<DateOnly>(type: "date", nullable: false),
-                    ColoreMantello = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CodiceFiscaleProprietario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Microchip = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Animali", x => x.IdAnimale);
-                });
-
             migrationBuilder.CreateTable(
                 name: "AnimaliSmarriti",
                 columns: table => new
@@ -43,7 +24,7 @@ namespace Sanitario.Migrations
                     ColoreMantello = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CodiceFiscaleProprietario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Microchip = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DataInizioRicover = table.Column<DateOnly>(type: "date", nullable: false),
+                    DataInizioRicovero = table.Column<DateOnly>(type: "date", nullable: false),
                     Foto = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -85,49 +66,13 @@ namespace Sanitario.Migrations
                 {
                     IdDipendente = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cognome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ruolo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Dipendenti", x => x.IdDipendente);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Prodotti",
-                columns: table => new
-                {
-                    IdProdotto = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Prezzo = table.Column<double>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prodotti", x => x.IdProdotto);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Visite",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdAnimale = table.Column<int>(type: "int", nullable: false),
-                    DataVisita = table.Column<DateOnly>(type: "date", nullable: false),
-                    Esame = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Visite", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Visite_Animali_IdAnimale",
-                        column: x => x.IdAnimale,
-                        principalTable: "Animali",
-                        principalColumn: "IdAnimale",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -147,6 +92,31 @@ namespace Sanitario.Migrations
                         column: x => x.IdArmadietto,
                         principalTable: "Armadietti",
                         principalColumn: "IdArmadietto",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Animali",
+                columns: table => new
+                {
+                    IdAnimale = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Tipologia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DataRegistrazione = table.Column<DateOnly>(type: "date", nullable: false),
+                    DataNascita = table.Column<DateOnly>(type: "date", nullable: false),
+                    ColoreMantello = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdCliente = table.Column<int>(type: "int", nullable: false),
+                    Microchip = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Animali", x => x.IdAnimale);
+                    table.ForeignKey(
+                        name: "FK_Animali_Clienti_IdCliente",
+                        column: x => x.IdCliente,
+                        principalTable: "Clienti",
+                        principalColumn: "IdCliente",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -172,6 +142,76 @@ namespace Sanitario.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Prodotti",
+                columns: table => new
+                {
+                    IdProdotto = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Prezzo = table.Column<double>(type: "float", nullable: false),
+                    TipoProdotto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdCassetto = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Prodotti", x => x.IdProdotto);
+                    table.ForeignKey(
+                        name: "FK_Prodotti_Cassetti_IdCassetto",
+                        column: x => x.IdCassetto,
+                        principalTable: "Cassetti",
+                        principalColumn: "IdCassetto",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Visite",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdAnimale = table.Column<int>(type: "int", nullable: false),
+                    DataVisita = table.Column<DateOnly>(type: "date", nullable: false),
+                    Esame = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Visite", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Visite_Animali_IdAnimale",
+                        column: x => x.IdAnimale,
+                        principalTable: "Animali",
+                        principalColumn: "IdAnimale",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DettagliVendite",
+                columns: table => new
+                {
+                    IdDettagliVendita = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdVendita = table.Column<int>(type: "int", nullable: false),
+                    IdProdotto = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DettagliVendite", x => x.IdDettagliVendita);
+                    table.ForeignKey(
+                        name: "FK_DettagliVendite_Prodotti_IdProdotto",
+                        column: x => x.IdProdotto,
+                        principalTable: "Prodotti",
+                        principalColumn: "IdProdotto",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DettagliVendite_Vendite_IdVendita",
+                        column: x => x.IdVendita,
+                        principalTable: "Vendite",
+                        principalColumn: "IdVendita",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CurePrescritte",
                 columns: table => new
                 {
@@ -192,82 +232,33 @@ namespace Sanitario.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Medicinali",
-                columns: table => new
-                {
-                    IdMedicinale = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Prezzo = table.Column<double>(type: "float", nullable: false),
-                    IdCassetto = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Medicinali", x => x.IdMedicinale);
-                    table.ForeignKey(
-                        name: "FK_Medicinali_Cassetti_IdCassetto",
-                        column: x => x.IdCassetto,
-                        principalTable: "Cassetti",
-                        principalColumn: "IdCassetto",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CuraPrescrittaMedicinale",
+                name: "CuraPrescrittaProdotto",
                 columns: table => new
                 {
                     CurePrescritteIdCuraPrescritta = table.Column<int>(type: "int", nullable: false),
-                    MedicinaliIdMedicinale = table.Column<int>(type: "int", nullable: false)
+                    ProdottiIdProdotto = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CuraPrescrittaMedicinale", x => new { x.CurePrescritteIdCuraPrescritta, x.MedicinaliIdMedicinale });
+                    table.PrimaryKey("PK_CuraPrescrittaProdotto", x => new { x.CurePrescritteIdCuraPrescritta, x.ProdottiIdProdotto });
                     table.ForeignKey(
-                        name: "FK_CuraPrescrittaMedicinale_CurePrescritte_CurePrescritteIdCuraPrescritta",
+                        name: "FK_CuraPrescrittaProdotto_CurePrescritte_CurePrescritteIdCuraPrescritta",
                         column: x => x.CurePrescritteIdCuraPrescritta,
                         principalTable: "CurePrescritte",
                         principalColumn: "IdCuraPrescritta",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CuraPrescrittaMedicinale_Medicinali_MedicinaliIdMedicinale",
-                        column: x => x.MedicinaliIdMedicinale,
-                        principalTable: "Medicinali",
-                        principalColumn: "IdMedicinale",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DettagliVendite",
-                columns: table => new
-                {
-                    IdDettagliVendita = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdVendita = table.Column<int>(type: "int", nullable: false),
-                    IdProdotto = table.Column<int>(type: "int", nullable: false),
-                    MedicinaleIdMedicinale = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DettagliVendite", x => x.IdDettagliVendita);
-                    table.ForeignKey(
-                        name: "FK_DettagliVendite_Medicinali_MedicinaleIdMedicinale",
-                        column: x => x.MedicinaleIdMedicinale,
-                        principalTable: "Medicinali",
-                        principalColumn: "IdMedicinale");
-                    table.ForeignKey(
-                        name: "FK_DettagliVendite_Prodotti_IdProdotto",
-                        column: x => x.IdProdotto,
+                        name: "FK_CuraPrescrittaProdotto_Prodotti_ProdottiIdProdotto",
+                        column: x => x.ProdottiIdProdotto,
                         principalTable: "Prodotti",
                         principalColumn: "IdProdotto",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DettagliVendite_Vendite_IdVendita",
-                        column: x => x.IdVendita,
-                        principalTable: "Vendite",
-                        principalColumn: "IdVendita",
-                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Animali_IdCliente",
+                table: "Animali",
+                column: "IdCliente");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cassetti_IdArmadietto",
@@ -275,9 +266,9 @@ namespace Sanitario.Migrations
                 column: "IdArmadietto");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CuraPrescrittaMedicinale_MedicinaliIdMedicinale",
-                table: "CuraPrescrittaMedicinale",
-                column: "MedicinaliIdMedicinale");
+                name: "IX_CuraPrescrittaProdotto_ProdottiIdProdotto",
+                table: "CuraPrescrittaProdotto",
+                column: "ProdottiIdProdotto");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CurePrescritte_IdVisita",
@@ -295,13 +286,8 @@ namespace Sanitario.Migrations
                 column: "IdVendita");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DettagliVendite_MedicinaleIdMedicinale",
-                table: "DettagliVendite",
-                column: "MedicinaleIdMedicinale");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Medicinali_IdCassetto",
-                table: "Medicinali",
+                name: "IX_Prodotti_IdCassetto",
+                table: "Prodotti",
                 column: "IdCassetto");
 
             migrationBuilder.CreateIndex(
@@ -322,7 +308,7 @@ namespace Sanitario.Migrations
                 name: "AnimaliSmarriti");
 
             migrationBuilder.DropTable(
-                name: "CuraPrescrittaMedicinale");
+                name: "CuraPrescrittaProdotto");
 
             migrationBuilder.DropTable(
                 name: "DettagliVendite");
@@ -332,9 +318,6 @@ namespace Sanitario.Migrations
 
             migrationBuilder.DropTable(
                 name: "CurePrescritte");
-
-            migrationBuilder.DropTable(
-                name: "Medicinali");
 
             migrationBuilder.DropTable(
                 name: "Prodotti");
@@ -349,13 +332,13 @@ namespace Sanitario.Migrations
                 name: "Cassetti");
 
             migrationBuilder.DropTable(
-                name: "Clienti");
-
-            migrationBuilder.DropTable(
                 name: "Animali");
 
             migrationBuilder.DropTable(
                 name: "Armadietti");
+
+            migrationBuilder.DropTable(
+                name: "Clienti");
         }
     }
 }

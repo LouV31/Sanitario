@@ -14,17 +14,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="IdCliente" class="control-label"></label>
-                <select asp-for="IdCliente" class ="form-control" asp-items="ViewBag.IdCliente"></select>
+                <select id="selectedCliente" asp-for="IdCliente" class="form-control" asp-items="ViewBag.IdCliente">
+                    <option> -- Seleziona utente --</option>
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="DataVendita" class="control-label"></label>
-                <input asp-for="DataVendita" class="form-control" />
-                <span asp-validation-for="DataVendita" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PrezzoTotale" class="control-label"></label>
-                <input asp-for="PrezzoTotale" class="form-control" />
-                <span asp-validation-for="PrezzoTotale" class="text-danger"></span>
+                <label class="control-label">Visite</label>
+                <select id="selectedVisite" class="form-control"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -38,5 +34,32 @@
 </div>
 
 @section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("partito")
+            $("#selectedCliente").change(function () {
+                console.log("change");
+                var idCliente = $("#selectedCliente").val();
+                console.log("idCliente: " + idCliente);
+                $.get('/Vendita/GetVisite/' + idCliente)
+                    .done(function (data) {
+                        console.log("Tutt appost");
+                        $("#selectedVisite").empty(); // Svuota il menu a discesa delle visite
+                        $.each(data.listaVisite, function (index, visita) {
+                            $("#selectedVisite").append($('<option>', {
+                                value: visita.id, // Valore dell'opzione (id della visita)
+                                text: visita.dataVisita // Testo dell'opzione (nome della visita)
+                            }));
+                            console.log(visita);
+                        });
+                    })
+                    .fail(function (xhr, textStatus, errorThrown) {
+                        console.error('Error fetching data:', errorThrown);
+                    });
+            });
+        });
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

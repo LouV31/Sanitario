@@ -13,6 +13,6 @@ namespace Sanitario.Models
         [Required]
         public int NumeroCassetto { get; set; }
         public virtual Armadietto Armadietto { get; set; }
-        public virtual ICollection<Medicinale> Medicinali { get; set; }
+        public virtual ICollection<Prodotto> Prodotti { get; set; }
     }
 }

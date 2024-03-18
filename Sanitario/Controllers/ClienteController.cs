@@ -52,6 +52,7 @@ namespace Sanitario.Controllers
         public async Task<IActionResult> Create([Bind("Nome,Cognome,CodiceFiscale")] Cliente cliente)
         {
             ModelState.Remove("Vendite");
+            ModelState.Remove("Animali");
             if (ModelState.IsValid)
             {
                 _context.Add(cliente);
@@ -90,6 +91,7 @@ namespace Sanitario.Controllers
             }
 
             ModelState.Remove("Vendite");
+            ModelState.Remove("Animali");
             if (ModelState.IsValid)
             {
                 try

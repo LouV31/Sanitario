@@ -12,8 +12,8 @@ using Sanitario.Data;
 namespace Sanitario.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240318101404_InitialUpdate")]
-    partial class InitialUpdate
+    [Migration("20240318140846_VisitaArchiviata")]
+    partial class VisitaArchiviata
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,19 +25,19 @@ namespace Sanitario.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CuraPrescrittaMedicinale", b =>
+            modelBuilder.Entity("CuraPrescrittaProdotto", b =>
                 {
                     b.Property<int>("CurePrescritteIdCuraPrescritta")
                         .HasColumnType("int");
 
-                    b.Property<int>("MedicinaliIdMedicinale")
+                    b.Property<int>("ProdottiIdProdotto")
                         .HasColumnType("int");
 
-                    b.HasKey("CurePrescritteIdCuraPrescritta", "MedicinaliIdMedicinale");
+                    b.HasKey("CurePrescritteIdCuraPrescritta", "ProdottiIdProdotto");
 
-                    b.HasIndex("MedicinaliIdMedicinale");
+                    b.HasIndex("ProdottiIdProdotto");
 
-                    b.ToTable("CuraPrescrittaMedicinale");
+                    b.ToTable("CuraPrescrittaProdotto");
                 });
 
             modelBuilder.Entity("Sanitario.Models.Animale", b =>
@@ -48,10 +48,6 @@ namespace Sanitario.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdAnimale"));
 
-                    b.Property<string>("CodiceFiscaleProprietario")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ColoreMantello")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -61,6 +57,9 @@ namespace Sanitario.Migrations
 
                     b.Property<DateOnly>("DataRegistrazione")
                         .HasColumnType("date");
+
+                    b.Property<int>("IdCliente")
+                        .HasColumnType("int");
 
                     b.Property<string>("Microchip")
                         .IsRequired()
@@ -75,6 +74,8 @@ namespace Sanitario.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdAnimale");
+
+                    b.HasIndex("IdCliente");
 
                     b.ToTable("Animali");
                 });
@@ -222,16 +223,11 @@ namespace Sanitario.Migrations
                     b.Property<int>("IdVendita")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MedicinaleIdMedicinale")
-                        .HasColumnType("int");
-
                     b.HasKey("IdDettagliVendita");
 
                     b.HasIndex("IdProdotto");
 
                     b.HasIndex("IdVendita");
-
-                    b.HasIndex("MedicinaleIdMedicinale");
 
                     b.ToTable("DettagliVendite");
                 });
@@ -261,13 +257,13 @@ namespace Sanitario.Migrations
                     b.ToTable("Dipendenti");
                 });
 
-            modelBuilder.Entity("Sanitario.Models.Medicinale", b =>
+            modelBuilder.Entity("Sanitario.Models.Prodotto", b =>
                 {
-                    b.Property<int>("IdMedicinale")
+                    b.Property<int>("IdProdotto")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMedicinale"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdProdotto"));
 
                     b.Property<string>("Descrizione")
                         .IsRequired()
@@ -283,33 +279,13 @@ namespace Sanitario.Migrations
                     b.Property<double>("Prezzo")
                         .HasColumnType("float");
 
-                    b.HasKey("IdMedicinale");
-
-                    b.HasIndex("IdCassetto");
-
-                    b.ToTable("Medicinali");
-                });
-
-            modelBuilder.Entity("Sanitario.Models.Prodotto", b =>
-                {
-                    b.Property<int>("IdProdotto")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdProdotto"));
-
-                    b.Property<string>("Descrizione")
+                    b.Property<string>("TipoProdotto")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Prezzo")
-                        .HasColumnType("float");
 
                     b.HasKey("IdProdotto");
+
+                    b.HasIndex("IdCassetto");
 
                     b.ToTable("Prodotti");
                 });
@@ -356,6 +332,9 @@ namespace Sanitario.Migrations
                     b.Property<int>("IdAnimale")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsArchiviato")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IdAnimale");
@@ -363,7 +342,7 @@ namespace Sanitario.Migrations
                     b.ToTable("Visite");
                 });
 
-            modelBuilder.Entity("CuraPrescrittaMedicinale", b =>
+            modelBuilder.Entity("CuraPrescrittaProdotto", b =>
                 {
                     b.HasOne("Sanitario.Models.CuraPrescritta", null)
                         .WithMany()
@@ -371,11 +350,22 @@ namespace Sanitario.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sanitario.Models.Medicinale", null)
+                    b.HasOne("Sanitario.Models.Prodotto", null)
                         .WithMany()
-                        .HasForeignKey("MedicinaliIdMedicinale")
+                        .HasForeignKey("ProdottiIdProdotto")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Sanitario.Models.Animale", b =>
+                {
+                    b.HasOne("Sanitario.Models.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("IdCliente")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("Sanitario.Models.Cassetto", b =>
@@ -414,19 +404,15 @@ namespace Sanitario.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sanitario.Models.Medicinale", null)
-                        .WithMany("DettagliVendite")
-                        .HasForeignKey("MedicinaleIdMedicinale");
-
                     b.Navigation("Prodotto");
 
                     b.Navigation("Vendita");
                 });
 
-            modelBuilder.Entity("Sanitario.Models.Medicinale", b =>
+            modelBuilder.Entity("Sanitario.Models.Prodotto", b =>
                 {
                     b.HasOne("Sanitario.Models.Cassetto", "Cassetto")
-                        .WithMany()
+                        .WithMany("Prodotti")
                         .HasForeignKey("IdCassetto")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -466,14 +452,14 @@ namespace Sanitario.Migrations
                     b.Navigation("Cassetti");
                 });
 
+            modelBuilder.Entity("Sanitario.Models.Cassetto", b =>
+                {
+                    b.Navigation("Prodotti");
+                });
+
             modelBuilder.Entity("Sanitario.Models.Cliente", b =>
                 {
                     b.Navigation("Vendite");
-                });
-
-            modelBuilder.Entity("Sanitario.Models.Medicinale", b =>
-                {
-                    b.Navigation("DettagliVendite");
                 });
 
             modelBuilder.Entity("Sanitario.Models.Prodotto", b =>

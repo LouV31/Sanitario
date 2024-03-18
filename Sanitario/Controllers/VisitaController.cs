@@ -18,7 +18,7 @@ namespace Sanitario.Controllers
         // GET: Visita
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Visite.Include(v => v.Animale);
+            var applicationDbContext = _context.Visite.Include(v => v.Animale).ThenInclude(a => a.Cliente);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -32,6 +32,7 @@ namespace Sanitario.Controllers
 
             var visita = await _context.Visite
                 .Include(v => v.Animale)
+                .ThenInclude(a => a.Cliente)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (visita == null)
             {
@@ -44,8 +45,8 @@ namespace Sanitario.Controllers
         // GET: Visita/Create
         public IActionResult Create()
         {
-            ViewData["IdAnimale"] = new SelectList(_context.Animali, "IdAnimale", "ColoreMantello");
-            ViewBag.ListaMedicinali = new MultiSelectList(_context.Medicinali, "IdMedicinale", "Nome");
+            ViewData["IdAnimale"] = new SelectList(_context.Animali.Include(a => a.Cliente), "IdAnimale", "NomeCompleto");
+            ViewBag.ListaMedicinali = new MultiSelectList(_context.Prodotti.Where(p => p.TipoProdotto == "Medicinale"), "IdProdotto", "Nome");
             return View();
         }
 
@@ -74,8 +75,8 @@ namespace Sanitario.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAnimale"] = new SelectList(_context.Animali, "IdAnimale", "ColoreMantello", visita.IdAnimale);
-            ViewBag.ListaMedicinali = new MultiSelectList(_context.Medicinali, "IdMedicinale", "Nome");
+            ViewData["IdAnimale"] = new SelectList(_context.Animali.Include(a => a.Cliente), "IdAnimale", "NomeCompleto", visita.IdAnimale);
+            ViewBag.ListaMedicinali = new MultiSelectList(_context.Prodotti.Where(p => p.TipoProdotto == "Medicinale"), "IdProdotto", "Nome");
             return View(visita);
         }
 
@@ -92,7 +93,7 @@ namespace Sanitario.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdAnimale"] = new SelectList(_context.Animali, "IdAnimale", "ColoreMantello", visita.IdAnimale);
+            ViewData["IdAnimale"] = new SelectList(_context.Animali.Include(a => a.Cliente), "IdAnimale", "NomeCompleto", visita.IdAnimale);
             return View(visita);
         }
 
@@ -106,6 +107,15 @@ namespace Sanitario.Controllers
             if (id != visita.Id)
             {
                 return NotFound();
+            }
+
+            var checkIdAnimale = _context.Animali.AsNoTracking().FirstOrDefault(a => a.IdAnimale == id);
+            if (checkIdAnimale.IdAnimale != visita.IdAnimale)
+            {
+                TempData["error"] = "Non puoi modificare l'ID della visita";
+
+                ViewData["IdAnimale"] = new SelectList(_context.Animali.Include(a => a.Cliente), "IdAnimale", "NomeCompleto", visita.IdAnimale);
+                return View(visita);
             }
 
             ModelState.Remove("CurePrescritte");

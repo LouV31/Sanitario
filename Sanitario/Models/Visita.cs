@@ -14,6 +14,7 @@ namespace Sanitario.Models
         public DateOnly DataVisita { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         [Required]
         public string Esame { get; set; }
+        public bool IsArchiviato { get; set; } = false;
 
         public virtual Animale Animale { get; set; }
         public virtual ICollection<CuraPrescritta> CurePrescritte { get; set; }

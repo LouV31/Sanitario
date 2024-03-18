@@ -44,8 +44,21 @@ namespace Sanitario.Controllers
         // GET: Vendita/Create
         public IActionResult Create()
         {
-            ViewData["IdCliente"] = new SelectList(_context.Clienti, "IdCliente", "CodiceFiscale");
+            ViewData["IdCliente"] = new SelectList(_context.Clienti, "IdCliente", "NomeCompleto");
+
             return View();
+        }
+
+        public IActionResult GetVisite(int idCliente)
+        {
+            var visite = _context.Animali
+                                .Include(a => a.Visite)
+                                .Where(a => a.IdCliente == idCliente)
+                                .SelectMany(a => a.Visite) // Per ottenere tutte le visite degli animali del cliente
+                                .Select(v => new { v.Id, v.DataVisita }) // Seleziona solo id e nome delle visite
+                                .ToList();
+
+            return Json(new { listaVisite = visite });
         }
 
         // POST: Vendita/Create

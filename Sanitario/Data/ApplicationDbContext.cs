@@ -17,7 +17,6 @@ namespace Sanitario.Data
         public DbSet<AnimaleSmarrito> AnimaliSmarriti { get; set; }
         public DbSet<Armadietto> Armadietti { get; set; }
         public DbSet<Cassetto> Cassetti { get; set; }
-        public DbSet<Medicinale> Medicinali { get; set; }
         public DbSet<CuraPrescritta> CurePrescritte { get; set; }
         public DbSet<Visita> Visite { get; set; }
         public DbSet<Vendita> Vendite { get; set; }
