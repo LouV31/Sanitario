@@ -130,9 +130,9 @@ namespace Sanitario.Controllers
             {
                 var curePrescritte = await _context.CurePrescritte
                     .Include(cp => cp.Prodotto)
-                    .ThenInclude(p => p.CurePrescritte)
                     .Where(cp => idVisita.Contains(cp.IdVisita))
                     .ToListAsync();
+
                 double prezzoTotale = 0;
                 foreach (var cura in curePrescritte)
                 {
