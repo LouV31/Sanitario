@@ -7,7 +7,6 @@ namespace Sanitario.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
         [ForeignKey("Animale")]
         public int IdAnimale { get; set; }
 

@@ -15,6 +15,6 @@ namespace Sanitario.Models
         public int IdProdotto { get; set; }
 
         public virtual Visita Visita { get; set; }
-        public virtual ICollection<Prodotto> Prodotti { get; set; }
+        public virtual Prodotto Prodotto { get; set; }
     }
 }

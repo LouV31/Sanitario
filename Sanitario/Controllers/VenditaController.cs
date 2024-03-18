@@ -49,17 +49,73 @@ namespace Sanitario.Controllers
             return View();
         }
 
-        public IActionResult GetVisite(int idCliente)
+        [HttpGet]
+        public async Task<IActionResult> GetVisite(int? idCliente)
         {
-            var visite = _context.Animali
-                                .Include(a => a.Visite)
-                                .Where(a => a.IdCliente == idCliente)
-                                .SelectMany(a => a.Visite) // Per ottenere tutte le visite degli animali del cliente
-                                .Select(v => new { v.Id, v.DataVisita }) // Seleziona solo id e nome delle visite
-                                .ToList();
+            try
+            {
+                if (idCliente == null)
+                {
+                    return BadRequest("Id cliente non fornito");
+                }
 
-            return Json(new { listaVisite = visite });
+                var visite = await _context.Visite
+                            .Include(v => v.Animale)
+                            .Where(v => v.Animale.IdCliente == idCliente && v.IsArchiviato == false)
+                            .ToListAsync();
+
+                // Costruisci una lista di oggetti con le informazioni necessarie
+                var visitaData = visite.Select(v => new
+                {
+                    id = v.Id,
+                    data = v.DataVisita,
+                    esame = v.Esame,
+                    nomeAnimale = v.Animale.Nome  // Aggiungi il nome dell'animale alla risposta
+                });
+
+                return Json(new { listaVisite = visitaData });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCure(int? idVisita)
+        {
+            try
+            {
+                if (idVisita == null)
+                {
+                    return BadRequest("Id visita non fornito");
+                }
+
+                var cure = await _context.CurePrescritte
+                            .Include(cp => cp.Prodotto)
+                            .Where(cp => cp.IdVisita == idVisita)
+                            .ToListAsync();
+
+                // Costruisci una lista di oggetti con le informazioni necessarie
+                var cureData = cure.Select(cp => new
+                {
+                    id = cp.IdCuraPrescritta,
+                    prodotto = new
+                    {
+                        idProdotto = cp.IdProdotto,
+                        nome = cp.Prodotto.Nome,
+                        prezzo = cp.Prodotto.Prezzo
+                    }
+                });
+
+                return Json(new { listaCure = cureData });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
 
         // POST: Vendita/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
