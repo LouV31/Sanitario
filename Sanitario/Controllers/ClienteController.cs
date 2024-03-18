@@ -5,22 +5,22 @@ using Sanitario.Models;
 
 namespace Sanitario.Controllers
 {
-    public class AnimaleController : Controller
+    public class ClienteController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public AnimaleController(ApplicationDbContext context)
+        public ClienteController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Animale
+        // GET: Cliente
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Animali.ToListAsync());
+            return View(await _context.Clienti.ToListAsync());
         }
 
-        // GET: Animale/Details/5
+        // GET: Cliente/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -28,40 +28,40 @@ namespace Sanitario.Controllers
                 return NotFound();
             }
 
-            var animale = await _context.Animali
-                .FirstOrDefaultAsync(m => m.IdAnimale == id);
-            if (animale == null)
+            var cliente = await _context.Clienti
+                .FirstOrDefaultAsync(m => m.IdCliente == id);
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(animale);
+            return View(cliente);
         }
 
-        // GET: Animale/Create
+        // GET: Cliente/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Animale/Create
+        // POST: Cliente/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip")] Animale animale)
+        public async Task<IActionResult> Create([Bind("Nome,Cognome,CodiceFiscale")] Cliente cliente)
         {
-
+            ModelState.Remove("Vendite");
             if (ModelState.IsValid)
             {
-                _context.Add(animale);
+                _context.Add(cliente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(animale);
+            return View(cliente);
         }
 
-        // GET: Animale/Edit/5
+        // GET: Cliente/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -69,37 +69,37 @@ namespace Sanitario.Controllers
                 return NotFound();
             }
 
-            var animale = await _context.Animali.FindAsync(id);
-            if (animale == null)
+            var cliente = await _context.Clienti.FindAsync(id);
+            if (cliente == null)
             {
                 return NotFound();
             }
-            return View(animale);
+            return View(cliente);
         }
 
-        // POST: Animale/Edit/5
+        // POST: Cliente/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdAnimale,Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip")] Animale animale)
+        public async Task<IActionResult> Edit(int id, [Bind("IdCliente,Nome,Cognome,CodiceFiscale")] Cliente cliente)
         {
-            if (id != animale.IdAnimale)
+            if (id != cliente.IdCliente)
             {
                 return NotFound();
             }
 
-            ModelState.Remove("Visite");
+            ModelState.Remove("Vendite");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(animale);
+                    _context.Update(cliente);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AnimaleExists(animale.IdAnimale))
+                    if (!ClienteExists(cliente.IdCliente))
                     {
                         return NotFound();
                     }
@@ -110,10 +110,10 @@ namespace Sanitario.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(animale);
+            return View(cliente);
         }
 
-        // GET: Animale/Delete/5
+        // GET: Cliente/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,34 +121,34 @@ namespace Sanitario.Controllers
                 return NotFound();
             }
 
-            var animale = await _context.Animali
-                .FirstOrDefaultAsync(m => m.IdAnimale == id);
-            if (animale == null)
+            var cliente = await _context.Clienti
+                .FirstOrDefaultAsync(m => m.IdCliente == id);
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(animale);
+            return View(cliente);
         }
 
-        // POST: Animale/Delete/5
+        // POST: Cliente/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var animale = await _context.Animali.FindAsync(id);
-            if (animale != null)
+            var cliente = await _context.Clienti.FindAsync(id);
+            if (cliente != null)
             {
-                _context.Animali.Remove(animale);
+                _context.Clienti.Remove(cliente);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AnimaleExists(int id)
+        private bool ClienteExists(int id)
         {
-            return _context.Animali.Any(e => e.IdAnimale == id);
+            return _context.Clienti.Any(e => e.IdCliente == id);
         }
     }
 }
