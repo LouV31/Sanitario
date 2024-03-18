@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Sanitario.Models.Animale>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tipologia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataRegistrazione)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataNascita)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ColoreMantello)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CodiceFiscaleProprietario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Microchip)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipologia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataRegistrazione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataNascita)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ColoreMantello)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CodiceFiscaleProprietario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Microchip)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdAnimale">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdAnimale">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdAnimale">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

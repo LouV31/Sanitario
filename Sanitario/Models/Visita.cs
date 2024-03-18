@@ -1,0 +1,21 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Sanitario.Models
+{
+    public class Visita
+    {
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        [ForeignKey("Animale")]
+        public int IdAnimale { get; set; }
+        [Required]
+        public DateOnly DataVisita { get; set; }
+        [Required]
+        public string Esame { get; set; }
+
+        public virtual Animale Animale { get; set; }
+        public virtual ICollection<CuraPrescritta> CurePrescritte { get; set; }
+    }
+}
