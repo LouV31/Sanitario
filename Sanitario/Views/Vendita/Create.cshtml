@@ -24,6 +24,10 @@
                     <option>-- Seleziona visita --</option>
                 </select>
             </div>
+            <div class="form-group">
+                <input type="hidden" name="idVisita" id="idVisita" value="" />
+                <input type="hidden" name="idCura" id="idCura" value="" />
+            </div>
             <div id="curePrescritte">
 
             </div>
@@ -46,14 +50,14 @@
             document.getElementById('selectedCliente').addEventListener('change', async function () {
                 $('#curePrescritte').empty();
                 var idCliente = this.value;
-                
+                console.log("IdCliente: ", idCliente);
                 try {
                     const response = await fetch('/Vendita/GetVisite?idCliente=' + idCliente);
                     if (!response.ok) {
                         throw new Error('HTTP error! status: ' + response.status);
                     }
                     const data = await response.json();
-
+                    console.log("myData: ", data)
                     // Rimuove tutte le opzioni esistenti
                     $('#selectedVisite').empty();
                     $('#selectedVisite').append($('<option>', {
@@ -72,7 +76,7 @@
             });
             document.getElementById('selectedVisite').addEventListener('change', async function () {
                 var idVisita = this.value;
-
+                document.getElementById("idVisita").value = idVisita;
                 try {
                     const response = await fetch('/Vendita/GetCure?idVisita=' + idVisita);
                     if (!response.ok) {

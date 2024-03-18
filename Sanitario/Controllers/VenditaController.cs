@@ -122,18 +122,42 @@ namespace Sanitario.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCliente,DataVendita,PrezzoTotale")] Vendita vendita)
+        public async Task<IActionResult> Create([Bind("IdCliente,DataVendita")] Vendita vendita, List<int> idVisita)
         {
             ModelState.Remove("DettagliVendite");
+            ModelState.Remove("Cliente");
             if (ModelState.IsValid)
             {
+                var curePrescritte = await _context.CurePrescritte
+                    .Include(cp => cp.Prodotto)
+                    .ThenInclude(p => p.CurePrescritte)
+                    .Where(cp => idVisita.Contains(cp.IdVisita))
+                    .ToListAsync();
+                double prezzoTotale = 0;
+                foreach (var cura in curePrescritte)
+                {
+                    prezzoTotale += cura.Prodotto.Prezzo;
+                }
+                vendita.PrezzoTotale = prezzoTotale;
                 _context.Add(vendita);
+                await _context.SaveChangesAsync();
+                foreach (var cura in curePrescritte)
+                {
+                    var dettaglioVendita = new DettagliVendita
+                    {
+                        IdVendita = vendita.IdVendita,
+                        IdProdotto = cura.IdProdotto,
+                    };
+                    _context.DettagliVendite.Add(dettaglioVendita);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdCliente"] = new SelectList(_context.Clienti, "IdCliente", "CodiceFiscale", vendita.IdCliente);
             return View(vendita);
         }
+
+
 
         // GET: Vendita/Edit/5
         public async Task<IActionResult> Edit(int? id)
