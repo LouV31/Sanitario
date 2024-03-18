@@ -41,6 +41,7 @@ namespace Sanitario.Controllers
         // GET: Animale/Create
         public IActionResult Create()
         {
+
             return View();
         }
 
@@ -49,14 +50,28 @@ namespace Sanitario.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip")] Animale animale)
+        public async Task<IActionResult> Create([Bind("Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip")] Animale animale, [Bind("Nome", "Cognome, CodiceFiscale")] Cliente cliente)
         {
 
+            ModelState.Remove("Visite");
+            ModelState.Remove("Cliente.Vendite");
+            ModelState.Remove("Cliente");
             if (ModelState.IsValid)
             {
+                if (_context.Clienti.FirstOrDefault(c => c.CodiceFiscale == cliente.CodiceFiscale) == null)
+                {
+
+                    _context.Add(cliente);
+                    await _context.SaveChangesAsync();
+                }
+                var clienteSelezionato = _context.Clienti.FirstOrDefault(c => c.CodiceFiscale == cliente.CodiceFiscale);
+                animale.IdCliente = clienteSelezionato.IdCliente;
                 _context.Add(animale);
                 await _context.SaveChangesAsync();
+
+
                 return RedirectToAction(nameof(Index));
+
             }
             return View(animale);
         }

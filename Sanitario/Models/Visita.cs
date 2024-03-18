@@ -10,8 +10,8 @@ namespace Sanitario.Models
         [Required]
         [ForeignKey("Animale")]
         public int IdAnimale { get; set; }
-        [Required]
-        public DateOnly DataVisita { get; set; }
+
+        public DateOnly DataVisita { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         [Required]
         public string Esame { get; set; }
 

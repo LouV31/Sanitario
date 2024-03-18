@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sanitario.Models
 {
@@ -10,17 +11,19 @@ namespace Sanitario.Models
         public string Nome { get; set; }
         [Required]
         public string Tipologia { get; set; }
-        [Required]
-        public DateOnly DataRegistrazione { get; set; }
+
+        public DateOnly DataRegistrazione { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         [Required]
         public DateOnly DataNascita { get; set; }
         [Required]
         public string ColoreMantello { get; set; }
 
-        public string CodiceFiscaleProprietario { get; set; } = "";
+        [ForeignKey("Cliente")]
+        public int IdCliente { get; set; }
 
         public string Microchip { get; set; } = "";
 
         public virtual ICollection<Visita> Visite { get; set; }
+        public virtual Cliente Cliente { get; set; }
     }
 }

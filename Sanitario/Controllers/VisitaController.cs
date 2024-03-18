@@ -45,24 +45,37 @@ namespace Sanitario.Controllers
         public IActionResult Create()
         {
             ViewData["IdAnimale"] = new SelectList(_context.Animali, "IdAnimale", "ColoreMantello");
+            ViewBag.ListaMedicinali = new MultiSelectList(_context.Medicinali, "IdMedicinale", "Nome");
             return View();
         }
+
+
 
         // POST: Visita/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdAnimale,DataVisita,Esame")] Visita visita)
+        public async Task<IActionResult> Create([Bind("IdAnimale,DataVisita,Esame")] Visita visita, List<int> medicinaliSelezionati)
         {
             ModelState.Remove("CurePrescritte");
+            ModelState.Remove("Animale");
             if (ModelState.IsValid)
             {
+                visita.CurePrescritte = new List<CuraPrescritta>();
                 _context.Add(visita);
+                await _context.SaveChangesAsync();
+                foreach (var idMedicinale in medicinaliSelezionati)
+                {
+                    var curaPrescritta = new CuraPrescritta { IdProdotto = idMedicinale, IdVisita = visita.Id };
+                    _context.Add(curaPrescritta);
+
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdAnimale"] = new SelectList(_context.Animali, "IdAnimale", "ColoreMantello", visita.IdAnimale);
+            ViewBag.ListaMedicinali = new MultiSelectList(_context.Medicinali, "IdMedicinale", "Nome");
             return View(visita);
         }
 

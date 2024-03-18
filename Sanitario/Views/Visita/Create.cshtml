@@ -16,15 +16,18 @@
                 <label asp-for="IdAnimale" class="control-label"></label>
                 <select asp-for="IdAnimale" class ="form-control" asp-items="ViewBag.IdAnimale"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="DataVisita" class="control-label"></label>
-                <input asp-for="DataVisita" class="form-control" />
-                <span asp-validation-for="DataVisita" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Esame" class="control-label"></label>
                 <input asp-for="Esame" class="form-control" />
                 <span asp-validation-for="Esame" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Medicinali">Medicinali</label>
+                @Html.ListBox("Medicinali", (MultiSelectList)ViewBag.ListaMedicinali, new { @class = "form-control" })
+                <button type="button" onclick="addMedicinali()">Aggiungi</button>
+            </div>
+            <div id="listaMedicinaliSelezionati" class="d-flex">
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -39,4 +42,52 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        let medicinaliArr = [];
+        let addMedicinali = () => {
+            let select = document.getElementById("Medicinali");
+            let idMedicinale = select.value;
+            let nomeMedicinale = select.options[select.selectedIndex].text;
+            if (!medicinaliArr.includes(idMedicinale)) {
+                medicinaliArr.push(idMedicinale);
+                let list = document.getElementById("listaMedicinaliSelezionati");
+
+                let container = document.createElement("div");
+                container.id = "container-" + idMedicinale;
+
+                let medicinale = document.createElement("p");
+                medicinale.id = "medicinale-" + idMedicinale;
+                medicinale.innerHTML = nomeMedicinale;
+
+                let removeButton = document.createElement("button");
+                removeButton.innerHTML = "Rimuovi";
+                removeButton.type = "button";
+                removeButton.onclick = () => removeMedicinale(idMedicinale);
+
+                container.appendChild(medicinale);
+                container.appendChild(removeButton);
+                list.appendChild(container);
+
+                let hiddenField = document.createElement("input");
+                hiddenField.type = "hidden";
+                hiddenField.name = "MedicinaliSelezionati";
+                hiddenField.value = idMedicinale;
+
+                let form = document.querySelector("form");
+                form.appendChild(hiddenField);
+            }
+
+            let removeMedicinale = (idMedicinale => {
+                let index = medicinaliArr.indexOf(idMedicinale);
+                if (index > -1) {
+                    medicinaliArr.splice(index, 1);
+                    let container = document.getElementById("container-" + idMedicinale);
+                    container.parentNode.removeChild(container);
+
+                    let hiddenField = document.querySelector("input[name='MedicinaliSelezionati'][value='" + idMedicinale + "']");
+                    hiddenField.parentNode.removeChild(hiddenField);
+                }
+            })
+        }
+    </script>
 }
