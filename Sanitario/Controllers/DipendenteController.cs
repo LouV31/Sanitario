@@ -53,9 +53,15 @@ namespace Sanitario.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_context.Dipendenti.Any(d => d.Username == dipendente.Username))
+                {
+                    TempData["error"] = "Nome utente già in uso";
+                    return View(dipendente);
+                }
                 _context.Add(dipendente);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["success"] = "Registrazione avvenuta con successo";
+                return RedirectToAction("Index", "Login");
             }
             return View(dipendente);
         }
