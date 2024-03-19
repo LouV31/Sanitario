@@ -40,9 +40,24 @@
                         <select id="products" class="form-control" asp-items="ViewBag.Products">
                             <option>-- Seleziona prodotto --</option>
                         </select>
-                        <div id="productsDiv">
-
-                        </div>
+                        
+                           @*  @{
+                                if (ViewData["Session"] != null)
+                                {
+                                    <div id="productsDiv">
+                                    foreach (var product in ViewData["Session"] as List<Prodotto>)
+                                    {
+                                        <p>@product.nome - @product.prezzo €</p>
+                                        <button data-product-id="@product.idProdotto" type="button" class="remove-product">Rimuovi</button>
+                                    }
+                                    </div>
+                                } else {
+                                <div id="productsDiv"></div>
+                                }
+                            } *@
+                            
+                            
+                        
                         <input type="hidden" id="productsListInput" name="productsList" value="" />
                     </div>
                 </div>

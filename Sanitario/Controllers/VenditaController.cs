@@ -50,6 +50,14 @@ namespace Sanitario.Controllers
         {
             ViewData["IdCliente"] = new SelectList(_context.Clienti, "IdCliente", "NomeCompleto");
             ViewData["Products"] = new SelectList(_context.Prodotti.Where(p => p.TipoProdotto == "Comune"), "IdProdotto", "NomeCompleto");
+            var session = HttpContext.Session.GetString("productList");
+            if (session != null)
+            {
+                var productList = JsonConvert.DeserializeObject<List<Prodotto>>(session);
+                ViewData["Session"] = productList;
+            }
+
+
 
             return View();
         }
@@ -258,10 +266,18 @@ namespace Sanitario.Controllers
 
 
                 await _context.SaveChangesAsync();
-
+                HttpContext.Session.Remove("productList");
                 return RedirectToAction(nameof(Index));
             }
+            var session = HttpContext.Session.GetString("productList");
+            if (session != null)
+            {
+                var productList = JsonConvert.DeserializeObject<List<Prodotto>>(session);
+                ViewData["Session"] = productList;
+            }
             ViewData["IdCliente"] = new SelectList(_context.Clienti, "IdCliente", "CodiceFiscale", vendita.IdCliente);
+            ViewData["Products"] = new SelectList(_context.Prodotti.Where(p => p.TipoProdotto == "Comune"), "IdProdotto", "NomeCompleto");
+
             return View(vendita);
         }
 
