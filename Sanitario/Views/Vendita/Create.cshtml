@@ -43,6 +43,7 @@
                         <div id="productsDiv">
 
                         </div>
+                        <input type="hidden" id="productsListInput" name="productsList" value="" />
                     </div>
                 </div>
             </div>
@@ -112,15 +113,53 @@
                     console.error('Error fetching data:', error);
                 }
             })
-            let productsList = [];
-            $("#products").change(function () {
+            
+            $("#products").change(function async() {
                 var idProduct = this.value;
                 var textProduct = $(this).find('option:selected').text();
+                try {
+                    const response = await fetch('/Vendita/AddProductToSession/' + idProduct);
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    const data = await response.json();
+                    console.log(data)
+                    // Rimuove tutte le opzioni esistenti
+                    $('#productsDiv').empty();
 
-                productsList.push(idProduct);
-                console.log(productsList);
-                $("#productsDiv").append(`<p id="prod-${idProduct}">${textProduct}</p>`);
+                    // Aggiunge le nuove opzioni
+                    data.list.forEach(function (product) {
+                        $('#productsDiv').append($(`<p>${product.nome} - ${product.prezzo}  </p><button class="remove-product">Rimuovi</button>`, {
+                            text: product.nome + " " + product.prezzo + "€" // Testo dell'opzione (nome della visita)
+                        }));
+                    });
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             })
+
+            $("#productsDiv").on('click', '.remove-product', function async () {
+                var idProduct = $(this).data('product-id');
+                
+                try {
+                    const response = await fetch('/Vendita/RemoveProductFromSession/' + idProduct);
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    
+                    // Rimuove tutte le opzioni esistenti
+                    $(this).remove();
+
+                    
+                    
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+                
+            });
+
+           
+
         });
     </script>
 }

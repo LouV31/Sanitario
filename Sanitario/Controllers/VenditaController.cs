@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Sanitario.Data;
 using Sanitario.Models;
 
@@ -120,7 +122,58 @@ namespace Sanitario.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
+        [HttpPost]
+        public IActionResult AddProductToSession(int? idProdotto)
+        {
+            var prodotto = _context.Prodotti.Find(idProdotto);
+            if (prodotto == null)
+            {
+                return NotFound();
+            }
 
+            var cartSession = HttpContext.Session.GetString("productList");
+            List<Prodotto> productList;
+
+            if (string.IsNullOrEmpty(cartSession))
+            {
+                productList = new List<Prodotto>();
+            }
+            else
+            {
+                productList = JsonConvert.DeserializeObject<List<Prodotto>>(cartSession);
+            }
+
+            productList.Add(prodotto);
+            HttpContext.Session.SetString("productList", JsonConvert.SerializeObject(productList));
+
+            return Json(new { list = productList });
+        }
+
+        [HttpPost]
+        public IActionResult RemoveProductFromSession(int id)
+        {
+            var product = _context.Prodotti.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var cartSession = HttpContext.Session.GetString("productList");
+            List<Prodotto> productList;
+
+            if (string.IsNullOrEmpty(cartSession))
+            {
+                return StatusCode(500, "Errore interno del server");
+            }
+            else
+            {
+                productList = JsonConvert.DeserializeObject<List<Prodotto>>(cartSession);
+            }
+
+            productList.Remove(product);
+            HttpContext.Session.SetString("productList", JsonConvert.SerializeObject(productList));
+            return Ok();
+        }
 
         // POST: Vendita/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -131,6 +184,7 @@ namespace Sanitario.Controllers
         {
             ModelState.Remove("DettagliVendite");
             ModelState.Remove("Cliente");
+
             if (ModelState.IsValid)
             {
                 var curePrescritte = await _context.CurePrescritte
@@ -143,6 +197,25 @@ namespace Sanitario.Controllers
                 {
                     prezzoTotale += cura.Prodotto.Prezzo;
                 }
+
+                var productListSession = HttpContext.Session.GetString("productList");
+                List<Prodotto> productList = new List<Prodotto>();
+                if (productListSession != null)
+                {
+                    productList = JsonConvert.DeserializeObject<List<Prodotto>>(productListSession);
+                    foreach (var product in productList)
+                    {
+                        prezzoTotale += product.Prezzo;
+                        var dettaglioVendita = new DettagliVendita
+                        {
+                            IdVendita = vendita.IdVendita,
+                            IdProdotto = product.IdProdotto,
+                        };
+                        _context.DettagliVendite.Add(dettaglioVendita);
+                    }
+                }
+
+
                 vendita.PrezzoTotale = prezzoTotale;
                 _context.Add(vendita);
                 await _context.SaveChangesAsync();
@@ -155,6 +228,8 @@ namespace Sanitario.Controllers
                     };
                     _context.DettagliVendite.Add(dettaglioVendita);
                 }
+
+
 
                 var id = TempData["IdVisita"];
                 var visita = await _context.Visite.FindAsync(id);
