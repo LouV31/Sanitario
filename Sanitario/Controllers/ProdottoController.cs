@@ -152,5 +152,70 @@ namespace Sanitario.Controllers
         {
             return _context.Prodotti.Any(e => e.IdProdotto == id);
         }
+
+        // Questo l'ho messo per testare da postman
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchMedicinale(string medicinale)
+        {
+
+            var prodotto = await _context.Prodotti
+                .Where(p => p.TipoProdotto == "Medicinale" && p.Nome.Contains(medicinale))
+                .Select(p => new
+                {
+                    p.IdProdotto,
+                    p.Nome,
+                    p.Descrizione,
+                    p.Prezzo,
+                    p.TipoProdotto,
+                    Armadietto = new
+                    {
+                        numeroArmadietto = p.Cassetto.Armadietto.NumeroArmadietto,
+                        numeroCassetto = p.Cassetto.NumeroCassetto
+                    }
+                })
+                .ToListAsync();
+
+
+            if (prodotto == null)
+            {
+                return NotFound();
+            }
+            return Json(prodotto);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> GetMedicinaleByDate(DateTime data)
+        {
+            var listMedicinali = await _context.Prodotti
+                .Where(p => p.TipoProdotto == "Medicinale" && p.DettagliVendite.Any(d => d.Vendita.DataVendita.Date == data))
+                .Select(p => new
+                {
+                    p.IdProdotto,
+                    p.Nome,
+                    p.Descrizione,
+                    p.Prezzo,
+                    p.TipoProdotto
+                })
+                .ToListAsync();
+            return Json(listMedicinali);
+
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> GetMedicinaliByCF(string codiceFiscale)
+        {
+            var listMedicinali = await _context.Prodotti
+                .Where(p => p.TipoProdotto == "Medicinale" && p.DettagliVendite.Any(d => d.Vendita.Cliente.CodiceFiscale == codiceFiscale))
+                .Select(p => new
+                {
+                    p.IdProdotto,
+                    p.Nome,
+                    p.Descrizione,
+                    p.Prezzo,
+                    p.TipoProdotto
+                })
+                .ToListAsync();
+            return Json(listMedicinali);
+        }
     }
 }
