@@ -123,7 +123,7 @@ namespace Sanitario.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AddProductToSession(int? idProdotto)
+        public IActionResult AddProductToSession(int idProdotto)
         {
             var prodotto = _context.Prodotti.Find(idProdotto);
             if (prodotto == null)
@@ -150,9 +150,9 @@ namespace Sanitario.Controllers
         }
 
         [HttpPost]
-        public IActionResult RemoveProductFromSession(int id)
+        public IActionResult RemoveProductFromSession(int idProdotto)
         {
-            var product = _context.Prodotti.Find(id);
+            var product = _context.Prodotti.Find(idProdotto);
             if (product == null)
             {
                 return NotFound();
@@ -170,10 +170,13 @@ namespace Sanitario.Controllers
                 productList = JsonConvert.DeserializeObject<List<Prodotto>>(cartSession);
             }
 
-            productList.Remove(product);
+            productList = productList.Where(p => p.IdProdotto != idProdotto).ToList(); // Rimuovi il prodotto dalla lista
+
             HttpContext.Session.SetString("productList", JsonConvert.SerializeObject(productList));
-            return Ok();
+
+            return Json(new { list = productList }); // Restituisci la lista aggiornata senza il prodotto rimosso
         }
+
 
         // POST: Vendita/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
