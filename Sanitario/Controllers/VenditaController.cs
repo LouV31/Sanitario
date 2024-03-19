@@ -91,6 +91,8 @@ namespace Sanitario.Controllers
                     return BadRequest("Id visita non fornito");
                 }
 
+                TempData["IdVisita"] = idVisita;
+
                 var cure = await _context.CurePrescritte
                             .Include(cp => cp.Prodotto)
                             .Where(cp => cp.IdVisita == idVisita)
@@ -150,7 +152,16 @@ namespace Sanitario.Controllers
                     };
                     _context.DettagliVendite.Add(dettaglioVendita);
                 }
+
+                var id = TempData["IdVisita"];
+                var visita = await _context.Visite.FindAsync(id);
+
+                visita.IsArchiviato = true;
+
+                _context.Visite.Update(visita);
                 await _context.SaveChangesAsync();
+
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdCliente"] = new SelectList(_context.Clienti, "IdCliente", "CodiceFiscale", vendita.IdCliente);

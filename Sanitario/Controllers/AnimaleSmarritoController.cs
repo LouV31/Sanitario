@@ -8,10 +8,11 @@ namespace Sanitario.Controllers
     public class AnimaleSmarritoController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public AnimaleSmarritoController(ApplicationDbContext context)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public AnimaleSmarritoController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: AnimaleSmarrito
@@ -49,9 +50,19 @@ namespace Sanitario.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip,DataInizioRicovero,Foto")] AnimaleSmarrito animaleSmarrito)
+        public async Task<IActionResult> Create([Bind("Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip,DataInizioRicovero")] AnimaleSmarrito animaleSmarrito, IFormFile Foto)
         {
-            ModelState.Remove("");
+
+            if (Foto != null && Foto.Length > 0)
+            {
+                var fileName = Path.GetFileName(Foto.FileName);
+                var path = Path.Combine(_hostEnvironment.WebRootPath, "imgs/", fileName);
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await Foto.CopyToAsync(fileStream);
+                }
+                animaleSmarrito.Foto = fileName;
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(animaleSmarrito);
