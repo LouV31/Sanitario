@@ -19,7 +19,7 @@ namespace Sanitario.Models
         public string CodiceFiscaleProprietario { get; set; } = "";
         public string Microchip { get; set; } = "";
         public DateOnly DataInizioRicovero { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-        [Required]
+
         public string Foto { get; set; }
     }
 }

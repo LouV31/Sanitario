@@ -50,19 +50,23 @@ namespace Sanitario.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip,DataInizioRicovero")] AnimaleSmarrito animaleSmarrito, IFormFile Foto)
+        public async Task<IActionResult> Create([Bind("Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip,DataInizioRicovero,Foto")] AnimaleSmarrito animaleSmarrito, IFormFile Foto)
         {
-
             if (Foto != null && Foto.Length > 0)
             {
-                var fileName = Path.GetFileName(Foto.FileName);
-                var path = Path.Combine(_hostEnvironment.WebRootPath, "imgs/", fileName);
-                using (var fileStream = new FileStream(path, FileMode.Create))
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\imgs\\", Foto.FileName);
+                using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    await Foto.CopyToAsync(fileStream);
+                    await Foto.CopyToAsync(stream);
                 }
-                animaleSmarrito.Foto = fileName;
+                animaleSmarrito.Foto = Foto.FileName;
             }
+            else
+            {
+                animaleSmarrito.Foto = "/imgs/default.jpg"; // Imposta un valore predefinito per Foto se FotoFile è null
+            }
+
+            ModelState.Remove("Foto");
             if (ModelState.IsValid)
             {
                 _context.Add(animaleSmarrito);
@@ -71,6 +75,7 @@ namespace Sanitario.Controllers
             }
             return View(animaleSmarrito);
         }
+
 
         // GET: AnimaleSmarrito/Edit/5
         public async Task<IActionResult> Edit(int? id)

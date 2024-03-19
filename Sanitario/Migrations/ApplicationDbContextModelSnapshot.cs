@@ -34,7 +34,7 @@ namespace Sanitario.Migrations
 
                     b.HasIndex("ProdottiIdProdotto");
 
-                    b.ToTable("CuraPrescrittaProdotto");
+                    b.ToTable("CuraPrescrittaProdotto", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.Animale", b =>
@@ -74,7 +74,7 @@ namespace Sanitario.Migrations
 
                     b.HasIndex("IdCliente");
 
-                    b.ToTable("Animali");
+                    b.ToTable("Animali", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.AnimaleSmarrito", b =>
@@ -120,7 +120,7 @@ namespace Sanitario.Migrations
 
                     b.HasKey("IdAnimaleSmarrito");
 
-                    b.ToTable("AnimaliSmarriti");
+                    b.ToTable("AnimaliSmarriti", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.Armadietto", b =>
@@ -136,7 +136,7 @@ namespace Sanitario.Migrations
 
                     b.HasKey("IdArmadietto");
 
-                    b.ToTable("Armadietti");
+                    b.ToTable("Armadietti", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.Cassetto", b =>
@@ -157,7 +157,7 @@ namespace Sanitario.Migrations
 
                     b.HasIndex("IdArmadietto");
 
-                    b.ToTable("Cassetti");
+                    b.ToTable("Cassetti", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.Cliente", b =>
@@ -182,7 +182,7 @@ namespace Sanitario.Migrations
 
                     b.HasKey("IdCliente");
 
-                    b.ToTable("Clienti");
+                    b.ToTable("Clienti", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.CuraPrescritta", b =>
@@ -203,7 +203,7 @@ namespace Sanitario.Migrations
 
                     b.HasIndex("IdVisita");
 
-                    b.ToTable("CurePrescritte");
+                    b.ToTable("CurePrescritte", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.DettagliVendita", b =>
@@ -226,7 +226,7 @@ namespace Sanitario.Migrations
 
                     b.HasIndex("IdVendita");
 
-                    b.ToTable("DettagliVendite");
+                    b.ToTable("DettagliVendite", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.Dipendente", b =>
@@ -251,7 +251,7 @@ namespace Sanitario.Migrations
 
                     b.HasKey("IdDipendente");
 
-                    b.ToTable("Dipendenti");
+                    b.ToTable("Dipendenti", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.Prodotto", b =>
@@ -284,7 +284,7 @@ namespace Sanitario.Migrations
 
                     b.HasIndex("IdCassetto");
 
-                    b.ToTable("Prodotti");
+                    b.ToTable("Prodotti", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.Vendita", b =>
@@ -308,7 +308,7 @@ namespace Sanitario.Migrations
 
                     b.HasIndex("IdCliente");
 
-                    b.ToTable("Vendite");
+                    b.ToTable("Vendite", (string)null);
                 });
 
             modelBuilder.Entity("Sanitario.Models.Visita", b =>
@@ -336,7 +336,7 @@ namespace Sanitario.Migrations
 
                     b.HasIndex("IdAnimale");
 
-                    b.ToTable("Visite");
+                    b.ToTable("Visite", (string)null);
                 });
 
             modelBuilder.Entity("CuraPrescrittaProdotto", b =>
