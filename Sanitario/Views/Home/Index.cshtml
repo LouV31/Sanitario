@@ -3,6 +3,67 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to AmicottiCucciolotti</h1>
+    <h3>Hai perso il cane? Magari lo abbiamo preso noi!</h3>
+
+    <div class="mb-5">
+        <label for="microchip">Inserisci il numero di microchip</label>
+        <div class="d-flex align-items-center justify-content-center">
+            <input id="microchip" name="microchip" placeholder="Numero microchip" class="me-2" required />
+            <button class="btn btn-primary" id="search">Cerca</button>
+        </div>
+            <p id="feedback" class="alert alert-danger d-none"></p>
+    </div>
+    <div id="result"></div>
+
 </div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#search").click(async function () {
+            var numeroMicrochip = $("#microchip").val();
+
+            if (numeroMicrochip) {
+                try {
+                    const response = await fetch('/Home/SearchAnimale?numeroMicrochip=' + numeroMicrochip);
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    const data = await response.json();
+                    console.log(data);
+                    var result = data.animale;
+
+                    if (result == null) {
+                        $("#result").empty();
+                        $("#result").append('<p>Non è stato trovato nessun animale ' + 
+                        'con il numero di microchip inserito.</p>');
+                    } else {
+                        $("#result").empty();
+                        $("#result").append(`
+                        <div class="d-flex justify-content-center"> 
+                            <img class="me-3" src="/imgs/${result.foto}" width="200" />
+                            <div class="d-flex flex-column justify-content-between">
+                                <div class="d-flex flex-column align-items-start">
+                                    <p class="mb-0">Nome: ${result.nome}</p>
+                                    <p>Data inizio ricovero: ${result.dataInizioRicovero}</p>
+                                </div>
+                                <a href="AnimaleSmarrito/Details/${result.idAnimaleSmarrito}" class="btn btn-primary">Vai ai dettagli</a>
+                            </div>
+                        </div>`);
+                    }
+
+
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            } else {
+                $("#feedback").text("Inserisci il numero del microchip");
+                $("#feedback").removeClass("d-none");
+                setTimeout(() => {
+                    $("#feedback").addClass("d-none");
+                }, 2000);
+            }
+        });
+    });
+</script>
+

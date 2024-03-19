@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sanitario.Data;
 using Sanitario.Models;
 
 namespace Sanitario.Controllers
 {
+    [Authorize(Roles = "Admin, Farmacista")]
     public class ArmadiettoController : Controller
     {
         private readonly ApplicationDbContext _context;

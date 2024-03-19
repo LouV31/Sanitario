@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sanitario.Data;
@@ -6,6 +7,7 @@ using Sanitario.Models;
 
 namespace Sanitario.Controllers
 {
+    [Authorize(Roles = "Admin, Farmacista")]
     public class VenditaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -45,6 +47,7 @@ namespace Sanitario.Controllers
         public IActionResult Create()
         {
             ViewData["IdCliente"] = new SelectList(_context.Clienti, "IdCliente", "NomeCompleto");
+            ViewData["Products"] = new SelectList(_context.Prodotti.Where(p => p.TipoProdotto == "Comune"), "IdProdotto", "NomeCompleto");
 
             return View();
         }

@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sanitario.Data;
 using Sanitario.Models;
 
 namespace Sanitario.Controllers
 {
+    [Authorize(Roles = "Admin, Veterinario")]
     public class AnimaleSmarritoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,6 +23,7 @@ namespace Sanitario.Controllers
             return View(await _context.AnimaliSmarriti.ToListAsync());
         }
 
+        [AllowAnonymous]
         // GET: AnimaleSmarrito/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sanitario.Data;
 using Sanitario.Models;
 
 namespace Sanitario.Controllers
 {
+    [Authorize(Roles = "Admin, Veterinario")]
     public class AnimaleController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -55,6 +57,7 @@ namespace Sanitario.Controllers
 
             ModelState.Remove("Visite");
             ModelState.Remove("Cliente.Vendite");
+            ModelState.Remove("Cliente.Animali");
             ModelState.Remove("Cliente");
             if (ModelState.IsValid)
             {
@@ -105,6 +108,9 @@ namespace Sanitario.Controllers
             }
 
             ModelState.Remove("Visite");
+            ModelState.Remove("Cliente.Vendite");
+            ModelState.Remove("Cliente.Animali");
+            ModelState.Remove("Cliente");
             if (ModelState.IsValid)
             {
                 try

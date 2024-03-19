@@ -17,6 +17,14 @@ namespace Sanitario.Models
         public string TipoProdotto { get; set; }
         [ForeignKey("Cassetto")]
         public int IdCassetto { get; set; }
+        [NotMapped]
+        public string NomeCompleto
+        {
+            get
+            {
+                return $"{Nome} - {Prezzo}€";
+            }
+        }
         public virtual Cassetto Cassetto { get; set; }
         public virtual ICollection<CuraPrescritta> CurePrescritte { get; set; }
         public virtual ICollection<DettagliVendita> DettagliVendite { get; set; }
