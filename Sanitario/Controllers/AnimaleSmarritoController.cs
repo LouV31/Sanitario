@@ -98,12 +98,27 @@ namespace Sanitario.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdAnimaleSmarrito,Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip,DataInizioRicovero,Foto")] AnimaleSmarrito animaleSmarrito)
+        public async Task<IActionResult> Edit(int id, [Bind("IdAnimaleSmarrito,Nome,Tipologia,DataRegistrazione,DataNascita,ColoreMantello,CodiceFiscaleProprietario,Microchip,DataInizioRicovero,Foto")] AnimaleSmarrito animaleSmarrito, IFormFile Foto)
         {
             if (id != animaleSmarrito.IdAnimaleSmarrito)
             {
                 return NotFound();
             }
+            if (Foto != null && Foto.Length > 0)
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\imgs\\", Foto.FileName);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await Foto.CopyToAsync(stream);
+                }
+                animaleSmarrito.Foto = Foto.FileName;
+            }
+            else
+            {
+                animaleSmarrito.Foto = "/imgs/default.jpg"; // Imposta un valore predefinito per Foto se FotoFile è null
+            }
+
+            ModelState.Remove("Foto");
 
             if (ModelState.IsValid)
             {

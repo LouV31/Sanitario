@@ -70,7 +70,7 @@
                 @Html.DisplayFor(modelItem => item.DataInizioRicovero)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Foto)
+                <img src="/imgs/@item.Foto" width="150"/>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdAnimaleSmarrito">Edit</a> |
