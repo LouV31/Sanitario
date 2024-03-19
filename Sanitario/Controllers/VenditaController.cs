@@ -183,22 +183,31 @@ namespace Sanitario.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCliente,DataVendita")] Vendita vendita, List<int> idVisita)
+        public async Task<IActionResult> Create([Bind("IdCliente,DataVendita")] Vendita vendita, int idVisita)
         {
             ModelState.Remove("DettagliVendite");
             ModelState.Remove("Cliente");
+            if (idVisita == 0)
+            {
+                ModelState.Remove("idVisita");
+            }
 
             if (ModelState.IsValid)
             {
-                var curePrescritte = await _context.CurePrescritte
+                double prezzoTotale = 0;
+                var curePrescritte = new List<CuraPrescritta>();
+
+                if (idVisita != 0)
+                {
+                    curePrescritte = await _context.CurePrescritte
                     .Include(cp => cp.Prodotto)
-                    .Where(cp => idVisita.Contains(cp.IdVisita))
+                    .Where(cp => cp.IdVisita == idVisita)
                     .ToListAsync();
 
-                double prezzoTotale = 0;
-                foreach (var cura in curePrescritte)
-                {
-                    prezzoTotale += cura.Prodotto.Prezzo;
+                    foreach (var cura in curePrescritte)
+                    {
+                        prezzoTotale += cura.Prodotto.Prezzo;
+                    }
                 }
 
                 var productListSession = HttpContext.Session.GetString("productList");
@@ -209,6 +218,17 @@ namespace Sanitario.Controllers
                     foreach (var product in productList)
                     {
                         prezzoTotale += product.Prezzo;
+                    }
+                }
+
+                vendita.PrezzoTotale = prezzoTotale;
+                _context.Add(vendita);
+                await _context.SaveChangesAsync();
+
+                if (productListSession != null)
+                {
+                    foreach (var product in productList)
+                    {
                         var dettaglioVendita = new DettagliVendita
                         {
                             IdVendita = vendita.IdVendita,
@@ -218,30 +238,26 @@ namespace Sanitario.Controllers
                     }
                 }
 
-
-                vendita.PrezzoTotale = prezzoTotale;
-                _context.Add(vendita);
-                await _context.SaveChangesAsync();
-                foreach (var cura in curePrescritte)
+                if (curePrescritte.Count > 0)
                 {
-                    var dettaglioVendita = new DettagliVendita
+                    foreach (var cura in curePrescritte)
                     {
-                        IdVendita = vendita.IdVendita,
-                        IdProdotto = cura.IdProdotto,
-                    };
-                    _context.DettagliVendite.Add(dettaglioVendita);
+                        var dettaglioVendita = new DettagliVendita
+                        {
+                            IdVendita = vendita.IdVendita,
+                            IdProdotto = cura.IdProdotto,
+                        };
+                        _context.DettagliVendite.Add(dettaglioVendita);
+                    }
+
+                    var visita = await _context.Visite.FindAsync(idVisita);
+                    visita.IsArchiviato = true;
+
+                    _context.Visite.Update(visita);
                 }
 
 
-
-                var id = TempData["IdVisita"];
-                var visita = await _context.Visite.FindAsync(id);
-
-                visita.IsArchiviato = true;
-
-                _context.Visite.Update(visita);
                 await _context.SaveChangesAsync();
-
 
                 return RedirectToAction(nameof(Index));
             }
