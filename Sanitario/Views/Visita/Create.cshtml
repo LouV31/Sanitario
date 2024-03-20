@@ -4,43 +4,49 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<div class="d-flex justify-content-between">
 
-<h4>Visita</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    <div class="d-flex flex-column align-items-start me-5 text-white">
+
+        <h1>Registra una visita</h1>
+
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdAnimale" class="control-label"></label>
-                <select asp-for="IdAnimale" class ="form-control" asp-items="ViewBag.IdAnimale"></select>
+            <div class="d-flex mb-3">
+                <div class="form-group me-3">
+                    <label class="control-label">Animale</label>
+                    <select asp-for="IdAnimale" class="form-control" asp-items="ViewBag.IdAnimale"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Esame" class="control-label"></label>
+                    <input asp-for="Esame" class="form-control" />
+                    <span asp-validation-for="Esame" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Esame" class="control-label"></label>
-                <input asp-for="Esame" class="form-control" />
-                <span asp-validation-for="Esame" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+
+            <div class="form-group mb-5">
                 <label for="Medicinali">Medicinali</label>
                 @Html.ListBox("Medicinali", (MultiSelectList)ViewBag.ListaMedicinali, new { @class = "form-control" })
-                <button type="button" onclick="addMedicinali()">Aggiungi</button>
-            </div>
-            <div id="listaMedicinaliSelezionati" class="d-flex">
+                <button type="button" class="btn btn-primary mt-2" onclick="addMedicinali()">Aggiungi</button>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
     </div>
-</div>
+    <div class="roundedCard blurredWhite shadow" style="max-height: 350px">
+        <div id="listaMedicinaliSelezionati" class="h-100 overflow-auto"></div>
+    </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
         let medicinaliArr = [];
         let addMedicinali = () => {
@@ -52,14 +58,17 @@
                 let list = document.getElementById("listaMedicinaliSelezionati");
 
                 let container = document.createElement("div");
+                container.className = "d-flex align-items-baseline justify-content-between pt-3 px-3";
                 container.id = "container-" + idMedicinale;
 
                 let medicinale = document.createElement("p");
+                medicinale.className = "mb-0";
                 medicinale.id = "medicinale-" + idMedicinale;
                 medicinale.innerHTML = nomeMedicinale;
 
                 let removeButton = document.createElement("button");
-                removeButton.innerHTML = "Rimuovi";
+                removeButton.className = "btn btn-sm btn-danger ms-3";
+                removeButton.innerHTML = '<i class="bi bi-trash3"></i>';
                 removeButton.type = "button";
                 removeButton.onclick = () => removeMedicinale(idMedicinale);
 
