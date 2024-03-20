@@ -35,22 +35,15 @@
                     var result = data.animale;
 
                     if (result == null) {
-                        $("#result").empty();
-                        $("#result").append('<p>Non è stato trovato nessun animale ' + 
-                        'con il numero di microchip inserito.</p>');
+                        $("#feedback").text("Nessun animale trovato.");
+                        $("#feedback").removeClass("d-none");
+                        setTimeout(() => {
+                            $("#feedback").addClass("d-none");
+                        }, 2000);
                     } else {
                         $("#result").empty();
-                        $("#result").append(`
-                            <div class="col-5 d-flex rounded p-2" style="background-color: #E9CCBA">
-                                <img class="me-3" src="/imgs/${result.foto}" width="200" />
-                            <div class="d-flex flex-column justify-content-between">
-                                <div class="d-flex flex-column align-items-start">
-                                    <p class="mb-0">Nome: ${result.nome}</p>
-                                    <p>Data inizio ricovero: ${result.dataInizioRicovero}</p>
-                                </div>
-                                <a href="AnimaleSmarrito/Details/${result.idAnimaleSmarrito}" class="btn btn-primary">Vai ai dettagli</a>
-                            </div>
-                        </div>`);
+                        
+                        location.assign("/AnimaleSmarrito/Details/" + result.idAnimaleSmarrito);    
                     }
 
 

@@ -43,6 +43,9 @@ body {
 .tertiaryBg {
     background-color: #334A52
 }
+.animalCardBg {
+    background-color: #F1F289
+}
 
 #mainContainer {
     min-height:75vh;
