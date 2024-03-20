@@ -18,5 +18,33 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: rgb(178,216,229);
+    background: linear-gradient(165deg, rgba(178,216,229,1) 0%, rgba(150,175,184,1) 62%);
+}
+
+.primary {
+    color: #B2D8E5
+}
+.secondary {
+    color: #96AFB8
+}
+.tertiary {
+    color: #334A52
+}
+
+.primaryBg {
+    background-color: #B2D8E5
+}
+.secondaryBg {
+    background-color: #96AFB8
+}
+.tertiaryBg {
+    background-color: #334A52
+}
+
+#mainContainer {
+    background-image: url('../imgs/site/backgroungImage.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
