@@ -7,7 +7,7 @@ using Sanitario.Models;
 
 namespace Sanitario.Controllers
 {
-    [Authorize(Roles = "Admin, Farmacista")]
+    [Authorize(Roles = "Admin, Farmacista, Veterinario")]
     public class CuraPrescrittaController : Controller
     {
         private readonly ApplicationDbContext _context;

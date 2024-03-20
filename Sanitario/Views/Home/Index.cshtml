@@ -1,20 +1,21 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "_HomeLayout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to AmicottiCucciolotti</h1>
-    <h3>Hai perso il cane? Magari lo abbiamo preso noi!</h3>
+<div>
+    <h1 class="display-4 fw-bold">Benvenuto a EverPet</h1>
+    <h3 class="mb-3">Se hai smarrito il tuo animale, prova a cercarlo tramite il suo </br> microchip!</h3>
 
-    <div class="mb-5">
-        <label for="microchip">Inserisci il numero di microchip</label>
-        <div class="d-flex align-items-center justify-content-center">
-            <input id="microchip" name="microchip" placeholder="Numero microchip" class="me-2" required />
+    <div class="mb-3">
+        <label for="microchip" class="mb-1">Inserisci il numero di microchip</label>
+        <div class="d-flex align-items-center mb-2">
+            <input id="microchip" name="microchip" placeholder="Numero microchip" class="rounded-pill border border-1 px-3 py-2 me-2" required />
             <button class="btn btn-primary" id="search">Cerca</button>
         </div>
-            <p id="feedback" class="alert alert-danger d-none"></p>
+        <p id="feedback" class="d-inline-block alert alert-danger d-none mb-0"></p>
     </div>
-    <div id="result"></div>
+    
 
 </div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -40,8 +41,8 @@
                     } else {
                         $("#result").empty();
                         $("#result").append(`
-                        <div class="d-flex justify-content-center"> 
-                            <img class="me-3" src="/imgs/${result.foto}" width="200" />
+                            <div class="col-5 d-flex rounded p-2" style="background-color: #E9CCBA">
+                                <img class="me-3" src="/imgs/${result.foto}" width="200" />
                             <div class="d-flex flex-column justify-content-between">
                                 <div class="d-flex flex-column align-items-start">
                                     <p class="mb-0">Nome: ${result.nome}</p>

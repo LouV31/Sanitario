@@ -21,6 +21,7 @@ body {
     margin-bottom: 60px;
     background: rgb(178,216,229);
     background: linear-gradient(165deg, rgba(178,216,229,1) 0%, rgba(150,175,184,1) 62%);
+    color: #22306B;
 }
 
 .primary {
@@ -44,7 +45,55 @@ body {
 }
 
 #mainContainer {
-    background-image: url('../imgs/site/backgroungImage.jpg');
-    background-size: cover;
+    min-height:75vh;
+    background-image: url('/imgs/site/backgroundImage.jpg');
+    background-size: contain;
     background-repeat: no-repeat;
+    background-position-x: right;
+}
+.primaryText {
+    color: #22306B;
+}
+#registerPet {
+    width: 300px;
+    height: 200px;
+    background-image: url("/imgs/site/360_F_541182743_kr9eoCdi1hGPRXNFbFM2DYKNtISnmLQe.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10px;
+}
+#visitaSection {
+    width: 300px;
+    height: 200px;
+    background-image: url("/imgs/site/Cane1.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10px;
+}
+#venditaSection {
+    width: 300px;
+    height: 200px;
+    background-image: url("/imgs/site/istockphoto-1457952279-170667a.webp");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10px;
+}
+#prodottiSection {
+    width: 300px;
+    height: 200px;
+    background-image: url("/imgs/site/Untitled_design_-_2023-06-20T145027.117.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10px;
+}
+.functionSection {
+    transition: transform 200ms ease-in-out;
+    box-shadow: 0px 0px 5px black;
+}
+
+.functionSection:hover {
+    transform: scale(1.1);
+    z-index: 900;
+    box-shadow: 0px 0px 10px black;
+    cursor: pointer;
 }
