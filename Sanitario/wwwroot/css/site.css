@@ -124,16 +124,44 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
 }
+/* SEZIONE ANIMALE */
 #animaleSplash {
     background-image: url("/imgs/site/backgroundAnimale.png");
     background-size: cover;
     background-repeat: no-repeat;
 }
+.animalePrimaryBtn {
+    background-color: #FF9978;
+    color: white;
+}
+    .animalePrimaryBtn:hover {
+        background-color: transparent;
+        box-shadow: 0 0 0 1px #fb855f;
+        color: #fb855f;
+    }
+
+/* SEZIONE VISITA */
 #visitaSplash {
     background-image: url("/imgs/site/backgroundVisita.png");
     background-size: cover;
     background-repeat: no-repeat;
 }
+.visitaSecondaryBtn {
+    background-color: #DB227A;
+    color: white;
+}
+    .visitaSecondaryBtn:hover {
+        background-color: #db488e;
+        color: white;
+    }
+.visitaTertiaryBtn {
+    background-color: #34517D;
+    color: white;
+}
+    .visitaTertiaryBtn:hover {
+        background-color: #425b80;
+        color: white;
+    }
 #venditaSplash {
     background-image: url("/imgs/site/backgroundVendita.png");
     background-size: cover;
@@ -158,3 +186,4 @@ body {
 .roundedCard {
     border-radius: 20px;
 }
+
