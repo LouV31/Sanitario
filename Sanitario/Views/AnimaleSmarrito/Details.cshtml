@@ -4,25 +4,14 @@
     ViewData["Title"] = "Details";
 }
 
-
-
-
-
 <div class="row justify-content-center">
-    <div class="col-7">
-        <div class="d-flex justify-content-center secondaryBg p-3 rounded-3">
-            
-                <img  src="/imgs/@Model.Foto" class="img-fluid rounded-3" />
-            
-            
-        </div>
-
-
-
-        
-
+    <div class="col-6">
+        <div class="d-flex justify-content-center secondaryBg p-3 rounded-3">            
+                <img  src="/imgs/@Model.Foto" class="img-fluid rounded-3" />         
+        </div>   
     </div>
-    <div class="col-5">
+
+    <div class="col-3">
         <div class="p-2 rounded  ">
             <p>
                 <strong>@Html.DisplayNameFor(model => model.Nome): </strong> @Html.DisplayFor(model => model.Nome)
