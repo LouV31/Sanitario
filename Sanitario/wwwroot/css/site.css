@@ -131,21 +131,27 @@ body {
     background-repeat: no-repeat;
 }
 .animalePrimaryBtn {
-    background-color: #FF9978;
+    background-color: #fc5f82;
     color: white;
 }
     .animalePrimaryBtn:hover {
-        background-color: transparent;
-        box-shadow: 0 0 0 1px #fb855f;
-        color: #fb855f;
+        background-color: #F97794;
+        color: white;
     }
-
-/* SEZIONE VISITA */
-#visitaSplash {
-    background-image: url("/imgs/site/backgroundVisita.png");
-    background-size: cover;
-    background-repeat: no-repeat;
+.animaleSecondaryLink {
+    text-decoration: none;
+    color: #C468A9;
 }
+    .animaleSecondaryLink:hover {
+        text-decoration: unset;
+        color: #c181ae;
+    }
+    /* SEZIONE VISITA */
+    #visitaSplash {
+        background-image: url("/imgs/site/backgroundVisita.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
 .visitaSecondaryBtn {
     background-color: #DB227A;
     color: white;
@@ -172,7 +178,7 @@ body {
     background-size: cover;
 }
 .navBg {
-    background-color: #ffffff33;
+    background-color: #ffffff41;
     backdrop-filter: blur(2px);
 }
 .blurred {

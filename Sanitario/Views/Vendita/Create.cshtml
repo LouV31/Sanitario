@@ -4,23 +4,22 @@
     ViewData["Title"] = "Create";
 }
 
+<div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center blurredWhite rounded p-2 shadow">
 
-<h1>Effettua una vendita</h1>
+        <div class="d-flex flex-column align-items-start me-5">
+            <h1>Effettua una vendita</h1>
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger" class="d-felx"></div>
 
-
-    <div class="">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger" class="d-felx"></div>
-            
                 <div class="">
-
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label asp-for="IdCliente" class="control-label"></label>
                         <select id="selectedCliente" asp-for="IdCliente" class="form-control" asp-items="ViewBag.IdCliente">
                             <option>-- Seleziona utente --</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label class="control-label">Visite</label>
                         <select id="selectedVisite" class="form-control">
                             <option>-- Seleziona visita --</option>
@@ -30,36 +29,37 @@
                         <input type="hidden" name="idVisita" id="idVisita" value="" />
                         <input type="hidden" name="idCura" id="idCura" value="" />
                     </div>
-                    <div id="curePrescritte">
-                    </div>
                 </div>
                 <div class="">
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label class="control-label">Acquista altri prodotti</label>
                         <select id="products" class="form-control" asp-items="ViewBag.Products">
                             <option>-- Seleziona prodotto --</option>
                         </select>
-                        <div id="productsDiv">
-                            @{
-                                if (ViewData["Session"] != null)
-                                {
-                                    foreach (var product in ViewData["Session"] as List<Prodotto>)
-                                    {
-                                        <p>@product.Nome - @product.Prezzo €</p>
-                                        <button data-product-id="@product.IdProdotto" type="button" class="remove-product">Rimuovi</button>
-                                    }
-                                }
-                            }
-                        </div>
                         <input type="hidden" id="productsListInput" name="productsList" value="" />
                     </div>
-                
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+        <div id="curePrescritte" class="me-5"></div>
+        <div id="productsDiv">
+            @{
+                if (ViewData["Session"] != null)
+                {
+                    foreach (var product in ViewData["Session"] as List<Prodotto>)
+                    {
+                        <p>@product.Nome - @product.Prezzo €</p>
+                        <button data-product-id="@product.IdProdotto" type="button" class="remove-product">Rimuovi</button>
+                    }
+                }
+            }
+        </div>
     </div>
+</div>
 
 
 <div>
@@ -110,6 +110,7 @@
                     console.log(data)
                     // Rimuove tutte le opzioni esistenti
                     $('#curePrescritte').empty();
+                    $('#curePrescritte').append('<h4>Medicinali</h4>')
 
                     // Aggiunge le nuove opzioni
                     data.listaCure.forEach(function (cura) {
@@ -136,6 +137,7 @@
                     console.log(data)
                     // Rimuove tutte le opzioni esistenti
                     $('#productsDiv').empty();
+                    $('#productsDiv').append('<h4>Prodotti</h4>')
 
                     // Aggiunge le nuove opzioni
                     data.list.forEach(function (product) {
