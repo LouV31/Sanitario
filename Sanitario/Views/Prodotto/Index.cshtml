@@ -4,44 +4,96 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between">
+    <h1>Prodotti</h1>
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descrizione)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Prezzo)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descrizione)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prezzo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdProdotto">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdProdotto">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdProdotto">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="d-flex justify-content-between">
+    <div class="blurredWhite rounded p-2 me-3" style="max-height:564px; overflow-y: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nome)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Descrizione)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TipoProdotto)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Prezzo)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <a class="lockerLink" style="cursor: pointer" data-product="@item.Cassetto.Armadietto.NumeroArmadietto/@item.Cassetto.NumeroCassetto">@Html.DisplayFor(modelItem => item.Nome)</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Descrizione)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TipoProdotto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Prezzo)€
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.IdProdotto">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.IdProdotto">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.IdProdotto">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="position-relative">
+        <img src="/imgs/site/MetalLocker.jpg" />
+        <p id="showArmadietto" class="d-none cassettoPos fs-3 fw-bold mb-0"></p>
+        <p id="showArrow" class="d-none"><i class="bi bi-arrow-left fs-1 fw-bold"></i></p>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".lockerLink").click(function () {
+            var idArmadietto = $(this).data("product").split('/')[0];
+            var idCassetto = $(this).data("product").split('/')[1];
+
+            $("#showArmadietto").text(`A${idArmadietto}/C${idCassetto}`);
+            $("#showArmadietto").removeClass("d-none");
+
+            var arrowClass;
+            switch (idCassetto) {
+                case '1':
+                    arrowClass = "arrow1";
+                    break;
+                case '2':
+                    arrowClass = "arrow2";
+                    break;
+                case '3':
+                    arrowClass = "arrow3";
+                    break;
+                default:
+                    arrowClass = "error";
+                    break;
+            }
+
+            $("#showArrow").removeClass().addClass(arrowClass).removeClass("d-none");
+        })
+    })
+</script>
+
+

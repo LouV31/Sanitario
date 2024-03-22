@@ -36,6 +36,8 @@ namespace Sanitario.Controllers
 
             var vendita = await _context.Vendite
                 .Include(v => v.Cliente)
+                .Include(v => v.DettagliVendite)
+                .ThenInclude(dv => dv.Prodotto)
                 .FirstOrDefaultAsync(m => m.IdVendita == id);
             if (vendita == null)
             {
@@ -54,7 +56,14 @@ namespace Sanitario.Controllers
             if (session != null)
             {
                 var productList = JsonConvert.DeserializeObject<List<Prodotto>>(session);
-                ViewData["Session"] = productList;
+                if (productList.Count > 0)
+                {
+                    ViewData["Session"] = productList;
+                }
+                else
+                {
+                    HttpContext.Session.Remove("productList");
+                }
             }
 
 
@@ -178,7 +187,7 @@ namespace Sanitario.Controllers
                 productList = JsonConvert.DeserializeObject<List<Prodotto>>(cartSession);
             }
 
-            productList = productList.Where(p => p.IdProdotto != idProdotto).ToList(); // Rimuovi il prodotto dalla lista
+            productList.Remove(productList.FirstOrDefault(p => p.IdProdotto == idProdotto)); // Rimuovi il prodotto dalla lista
 
             HttpContext.Session.SetString("productList", JsonConvert.SerializeObject(productList));
 
