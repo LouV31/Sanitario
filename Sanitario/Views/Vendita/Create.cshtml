@@ -40,9 +40,15 @@
                         </div>
 
                     </div>
+                    
+
                     <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <input type="submit" value="Conferma" class="btn btn-primary mb-3" />
                     </div>
+                    <div>
+                        <a asp-action="Index" class="text-black shadow">Visualizza la lista completa delle vendite</a>
+                    </div>
+                    
                 </form>
 
                 <div id="curePrescritte" style="max-height: 240px; overflow-y: auto" class="me-5"></div>
@@ -68,9 +74,6 @@
 </div>
 
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -148,11 +151,11 @@
                     // Aggiunge le nuove opzioni
                     data.list.forEach(function (product) {
                         $('#productsDiv').append($(`
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <p class="mb-0 me-2">${product.nome} - ${product.prezzo} €</p>
-                            <button data-product-id="${product.idProdotto}" type="button" class="btn-sm btn-danger remove-product"><i class="bi bi-trash3"></i></button>
-                        </div>
-                        `));
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <p class="mb-0 me-2">${product.nome} - ${product.prezzo} €</p>
+                                            <button data-product-id="${product.idProdotto}" type="button" class="btn-sm btn-danger remove-product"><i class="bi bi-trash3"></i></button>
+                                        </div>
+                                        `));
                     });
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -178,11 +181,11 @@
 
                         data.list.forEach(function (product) {
                             $('#productsDiv').append($(`
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <p class="mb-0 me-2">${product.nome} - ${product.prezzo} €</p>
-                                    <button data-product-id="${product.idProdotto}" type="button" class="btn-sm btn-danger remove-product"><i class="bi bi-trash3"></i></button>
-                                </div>
-                                    `));
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <p class="mb-0 me-2">${product.nome} - ${product.prezzo} €</p>
+                                                    <button data-product-id="${product.idProdotto}" type="button" class="btn-sm btn-danger remove-product"><i class="bi bi-trash3"></i></button>
+                                                </div>
+                                                    `));
                         });
                     }
 

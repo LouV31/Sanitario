@@ -1,8 +1,8 @@
 ﻿@if (User.IsInRole("Admin"))
- {
-     <div class="blurredWhite rounded p-2">
-         @if (User.IsInRole("Admin") || User.IsInRole("Veterinario"))
-         {
+{
+    <div class="blurredWhite rounded p-2">
+        @if (User.IsInRole("Admin") || User.IsInRole("Veterinario"))
+        {
             <div>
                 <h2 class="text-center mb-3">Veterinario</h2>
                 <div class="row row-cols-4 justify-content-around">
@@ -21,11 +21,11 @@
                         </a>
                     </div>
                 </div>
-            </div>    
-         }
-         @if (User.IsInRole("Admin") || User.IsInRole("Farmacista"))
-         {
-             <div>
+            </div>
+        }
+        @if (User.IsInRole("Admin") || User.IsInRole("Farmacista"))
+        {
+            <div>
                 <h2 class="text-center mb-3">Farmacista</h2>
                 <div class="row row-cols-4 justify-content-around">
                     <div class="col" style="height: 200px">
@@ -43,11 +43,19 @@
                         </a>
                     </div>
                 </div>
-             </div>
-         }
-         <div>
+            </div>
+        }
+        <div>
             <h2 class="text-center mb-3">Admin</h2>
-             <a asp-controller=""></a>
-         </div>
+            <div class=" row row-cols-4 justify-content-center">
+                <div class="col" style="height: 200px">
+                    <a class="text-decoration-none" asp-controller="Dipendente" asp-action="Index">
+                        <div id="dipendenti" class="position-relative functionSection">
+                            <p class="bg-white fw-bold d-inline-block rounded-3 py-1 px-2 mt-2 ms-2 mb-0">Dipendenti</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
- }
+}

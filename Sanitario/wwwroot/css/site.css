@@ -247,3 +247,12 @@ body {
     background-size: cover;
     border-radius: 10px;
 }
+
+#dipendenti {
+    width: 100%;
+    height: 100%;
+    background-image: url("/imgs/site/istockphoto-1201014996-170667a.webp");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10px;
+}

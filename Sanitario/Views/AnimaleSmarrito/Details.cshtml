@@ -5,6 +5,7 @@
 }
 
 <div class="row justify-content-center">
+    
     <div class="col-6">
         <div class="d-flex justify-content-center">            
                 <img  src="/imgs/@Model.Foto" class="img-fluid rounded-3" />         
@@ -48,8 +49,11 @@
                 if (User.IsInRole("Admin") || User.IsInRole("Veterinario"))
                 {
                     <div>
-                        <a asp-action="Edit" asp-route-id="@Model?.IdAnimaleSmarrito">Edit</a> |
-                        <a asp-action="Index">Back to List</a>
+                        <a asp-action="Edit" asp-route-id="@Model?.IdAnimaleSmarrito"><i class="bi bi-pencil fs-5 text-success"></i></a>
+                       
+                    </div>
+                    <div>
+                        <a asp-action="Index" class="text-black shadow">Visualizza la lista completa degli animali smarriti</a>
                     </div>
                 }
             } 
