@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sanitario.Data;
 using Sanitario.Models;
@@ -43,6 +44,11 @@ namespace Sanitario.Controllers
         // GET: Prodotto/Create
         public IActionResult Create()
         {
+            ViewBag.Cassetti = _context.Cassetti.Select(c => new SelectListItem
+            {
+                Value = c.IdCassetto.ToString(),
+                Text = $"Cassetto: {c.NumeroCassetto} - Armadietto: {c.Armadietto.NumeroArmadietto}"
+            }).ToList();
             return View();
         }
 
@@ -51,15 +57,18 @@ namespace Sanitario.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nome,Descrizione,Prezzo")] Prodotto prodotto)
+        public async Task<IActionResult> Create([Bind("Nome,Descrizione,Prezzo, TipoProdotto, IdCassetto")] Prodotto prodotto)
         {
             ModelState.Remove("DettagliVendite");
+            ModelState.Remove("CurePrescritte");
+            ModelState.Remove("Cassetto");
             if (ModelState.IsValid)
             {
                 _context.Add(prodotto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Cassetti = new SelectList(_context.Cassetti, "IdCassetto", "NomeCassetto");
             return View(prodotto);
         }
 

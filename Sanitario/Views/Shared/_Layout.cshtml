@@ -56,9 +56,12 @@
                             <li class="nav-item">
                                 <a class="nav-link primaryText" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link primaryText" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
+                            @{
+                                if (User.IsInRole("Admin"))
+                                {
+                                    <a class="nav-link primaryText" asp-area="" asp-controller="Dipendente" asp-action="Index">BackOffice</a>
+                                }
+                            }
                         </ul>
                         @{
                             if (!User.Identity.IsAuthenticated)
