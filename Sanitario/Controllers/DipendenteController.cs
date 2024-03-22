@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sanitario.Data;
 using Sanitario.Models;
@@ -153,6 +154,17 @@ namespace Sanitario.Controllers
         private bool DipendenteExists(int id)
         {
             return _context.Dipendenti.Any(e => e.IdDipendente == id);
+        }
+
+        public IActionResult BackOffice()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin, Farmacista")]
+        public IActionResult Operazioni()
+        {
+            return View();
         }
     }
 }

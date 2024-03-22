@@ -198,10 +198,10 @@ namespace Sanitario.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> GetMedicinaleByDate(DateTime data)
+        public async Task<IActionResult> GetMedicinaleByDate(DateOnly data)
         {
             var listMedicinali = await _context.Prodotti
-                .Where(p => p.TipoProdotto == "Medicinale" && p.DettagliVendite.Any(d => d.Vendita.DataVendita.Date == data))
+                .Where(p => p.TipoProdotto == "Medicinale" && p.DettagliVendite.Any(d => DateOnly.FromDateTime(d.Vendita.DataVendita.Date) == data))
                 .Select(p => new
                 {
                     p.IdProdotto,
