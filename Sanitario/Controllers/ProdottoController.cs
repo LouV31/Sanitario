@@ -19,7 +19,12 @@ namespace Sanitario.Controllers
         // GET: Prodotto
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Prodotti.ToListAsync());
+            var prodotti = await _context.Prodotti
+                            .Include(p => p.Cassetto)
+                            .ThenInclude(c => c.Armadietto)
+                            .ToListAsync();
+
+            return View(prodotti);
         }
 
         // GET: Prodotto/Details/5

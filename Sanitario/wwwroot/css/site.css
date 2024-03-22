@@ -192,4 +192,26 @@ body {
 .roundedCard {
     border-radius: 20px;
 }
-
+.cassettoPos {
+    position: absolute;
+    top: 15%;
+    right: 31.5%;
+}
+.arrow1 {
+    position: absolute;
+    top: 30%;
+    right: 20%;
+    margin-bottom: 0;
+}
+.arrow2 {
+    position: absolute;
+    top: 50%;
+    right: 20%;
+    margin-bottom: 0;
+}
+.arrow3 {
+    position: absolute;
+    top: 70%;
+    right: 20%;
+    margin-bottom: 0;
+}
