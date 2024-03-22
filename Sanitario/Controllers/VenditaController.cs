@@ -36,6 +36,8 @@ namespace Sanitario.Controllers
 
             var vendita = await _context.Vendite
                 .Include(v => v.Cliente)
+                .Include(v => v.DettagliVendite)
+                .ThenInclude(dv => dv.Prodotto)
                 .FirstOrDefaultAsync(m => m.IdVendita == id);
             if (vendita == null)
             {
